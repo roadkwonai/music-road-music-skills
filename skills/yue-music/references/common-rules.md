@@ -93,8 +93,8 @@ Road Music CLI 명령 중 일부는 **서비스(백그라운드 앱)를 시작**
 
 | 구분 | 명령 |
 | --- | --- |
-| 로컬(서비스·모델 없음) | `cli:version`, `cli:update:check`, `cli:schema`, `prompt:knowledge`, `song:prepare`, `yue:capabilities`, `score:inspect`, `score:compare`, `score:strip-chords`, `production:*`, `works:list` |
-| 서비스 시작 | `schema`, `app:state`, `setup:check`, `engines:list`, `projects:*`, `songs:list`, `song:detail`, `song:score`, `lyrics:clean`, `lyrics:check`, `prompt:compose`, `score:check`, `queue:list`, `job:wait`, 생성 명령 |
+| 로컬(서비스·모델 없음) | `cli:version`, `cli:update:check`, `cli:schema`, `prompt:knowledge`, `song:prepare`, `yue:capabilities`, `score:inspect`, `score:compare`, `score:strip-chords`, `production:*`, `works:list`, `service:status`, 그리고 `--no-start`를 붙인 명령 |
+| 서비스 시작 | `cli:status`, `schema`, `app:state`, `setup:check`, `engines:list`, `projects:*`, `songs:list`, `song:detail`, `song:score`, `lyrics:clean`, `lyrics:check`, `prompt:compose`, `score:check`, `queue:list`, `job:wait`, 생성 명령 |
 
 초안만 모드의 정리 확인은 `song:prepare`의 `changes.lyrics.prepared`·`changes.style.prepared`·`notes`로 한다. 서비스 명령은 생성 준비 단계(검토안 제시 직전 또는 승인 후)에서 쓴다. `score:transcribe`는 로컬이지만 별도 SheetSage2 환경이 필요하다. 헤드리스 실행에서는 `ROADMUSIC_STUDIO_AUTO_OPEN=0`을 쓴다.
 
@@ -121,5 +121,6 @@ YuE·`yue-mlx`의 프롬프트를 쓰거나 생성을 준비할 때마다(초안
 - 외부 전송·브라우저 열기·피드백 전송은 사용자의 명시적 요청 없이 하지 않는다.
 - 테스트·검증에서 데이터 폴더가 필요하면 `ROADMUSIC_DATA_DIR`를 임시 폴더로 분리하고, 그 폴더로 시작한 서비스는 끝나면 같은 `ROADMUSIC_DATA_DIR`로 `cli:stop`해 정리한다.
 - 곡·프로젝트 경로는 `songs:list`·`projects:list`가 돌려준 절대 경로를 그대로 쓴다. 기존 파일을 덮어쓰지 않으며 `--overwrite`는 사용자가 요청했을 때만 쓴다.
-- `uncertain:true`면 재제출하지 말고 `service:status`·`queue:list`·`songs:list`로 실행 여부부터 확인한다.
-- 실제 생성·수정 요청은 접수할 때부터 Road Music 제작 기록 스킬(`skills/road-music-production-records`)을 적용해 요청 원문을 기록하고, 생성 시간·결과 파일을 같은 요청에 연결한다. 저장공간 정리는 `skills/road-music-storage`의 미리보기·확인 절차로만 한다.
+- `uncertain:true`면 재제출하지 말고 `service:status`·`queue:list --no-start`·`songs:list`로 실행 여부부터 확인한다.
+- 실제 생성·수정 요청은 Road Music 제작 기록 스킬(`skills/road-music-production-records`)을 적용한다. 생성·렌더·리플레이는 `requestPrompt`에 사용자 요청 원문을 넣으면 Road Music이 실제 곡 폴더에 연결해 자동 기록하므로 `production:request`를 따로 중복 기록하지 않는다.
+- **새 곡은 새 프로젝트에:** 생성 전에 `app:state`의 `songsDir`·`projects:list`의 `current`를 확인한다. 현재 프로젝트가 이 곡과 관계없는 다른 작업이면 새 프로젝트를 만들어(`projects:create`) 선택(`projects:select`)한 뒤 생성한다. 같은 곡의 수정·재제작은 원래 프로젝트를 쓴다. 선택은 앱의 현재 프로젝트를 바꾸므로 보고에 적는다. 저장공간 정리는 `skills/road-music-storage`의 미리보기·확인 절차로만 한다.

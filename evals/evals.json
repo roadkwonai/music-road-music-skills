@@ -27,6 +27,13 @@
         "evals/files/test-tone-48k.flac"
       ],
       "assertions": []
+    },
+    {
+      "id": 5,
+      "prompt": "이 스킬로 CLI 이용해서 YuE2 모델로 성량좋고 고음 쭉쭉 날카롭게 뽑아내는 여성 락보컬이 부르는 락발라드 음악하나 생성해줘. 가사·프롬프트를 전부 자동으로 생성해서 진행해.",
+      "expected_output": "전체 자동 위임: yue-mlx 유지, 강한 여성 락보컬 고음 묘사 style(긍정형), requestPrompt, 새 프로젝트 선택, 생성·job:wait 명령, 승인 질문 없음, 보정 보고, 고음·길이 비보장",
+      "files": [],
+      "assertions": []
     }
   ]
 }

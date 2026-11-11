@@ -12,7 +12,10 @@ description: Road Music YuE2(yue-mlx/yue) 생성 완료 후 결과를 검수하�
 1. `job:wait` 결과와 `songs:list`/`song:detail`의 절대 경로로 실제 파일을 찾는다.
 2. 실제 worker의 엔진·모델/VAE·runtime, 요청/정리/전달 가사, style·cot·seed·실효 설정을 승인안과 대조한다.
 3. `result.json`의 `status`와 **`truncated.abc`·`truncated.semantic`을 각각** 확인한다. 둘 중 하나라도 참이면 재생 가능해도 완주로 채택하지 않는다.
-4. 실제 길이·포맷(48kHz stereo)·전체 디코딩·끝맺음. `targetSeconds`와 실제 길이를 나란히 적는다(차이는 정상일 수 있음).
+4. 실제 길이·포맷(48kHz stereo)·전체 디코딩·끝맺음. `targetSeconds`와 실제 길이를 나란히 적는다(차이는 정상일 수 있음). 실제 길이는 생성된 악보 계획을 따르므로 `score:inspect`의 `nominal_duration_seconds`와 비교하면 원인을 알기 쉽다.
+   - **원본 파일로 검사:** `job:wait` 결과의 `audio`·`mp3`는 납품용 MP3를 가리킬 수 있다. 기술 검사·전사는 곡 `dir`의 원본 `audio.flac`으로 한다.
+   - **결과 필드:** `song.seconds`(실제 길이), `song.truncated`, `song.timing`(abc·semantic·acoustic 단계별 시간), `song.source`(모델·VAE·런타임 리비전), `song.runtime`(정밀도)을 보고에 옮긴다.
+   - **라우드니스·피크:** `ffmpeg -i audio.flac -af ebur128=peak=true -f null -`로 통합 LUFS·트루피크를 잰다. YuE2 원본은 트루피크가 0 dBFS를 넘을 수 있으므로(2026-11-12 실측 +0.2 dBFS) 업로드·배포 전에는 `yue-mastering`을 권한다. 원본은 고치지 않는다.
 5. 원본 FLAC·악보·artifact를 보존한다. MP3는 별도 납품 변환.
 
 ## 2. 가사 반영 (가사가 있는 곡)
@@ -22,6 +25,8 @@ description: Road Music YuE2(yue-mlx/yue) 생성 완료 후 결과를 검수하�
 - 비교에서 정규화한 항목(태그·공백 등)을 기록하고 원문·원시 전사를 보관한다. 조사·어미·부정어를 지우거나 환각성 말미를 잘라 일치율을 높이지 않는다. 문자 일치율·CER은 전사 문자열 비교이지 가창 오류율·음질 점수가 아니다.
 - 가사가 있는 구간이 전사에서 빠지면 현재 악보의 해당 구간도 본다(예: Intro/Outro의 Vocal이 모두 쉼표이거나 구간 자체가 없음). ASR만으로 누락을 확정하거나 가사를 지워 맞추지 않는다.
 - 새 악보 실행 여부는 native 요청의 외부 ABC 부재, `plan.request.abc`, planner 로그를 함께 본다. **악보 해시가 다르다는 것만으로 새 계획 실행을 증명하지 않고**, 같다는 것만으로 재사용이라 단정하지 않는다.
+- **로컬 Whisper 예(있을 때만):** `whisper-cli`와 ggml 모델(예: `~/.cache/whisper-models/ggml-large-v3-turbo.bin`)이 있으면 원본을 16kHz 모노로 바꿔 `whisper-cli -m <모델> -f asr-16k.wav -l ko -otxt -osrt -of asr-full`로 전곡을 전사한다(`--prompt`에 가사를 넣지 않는다). 엇갈린 구간은 SRT 시각을 보고 `ffmpeg -ss <시작> -t 30~35`로 잘라 같은 조건으로 다시 전사한다. 모델이 한 계열뿐이면 그렇게 적는다.
+- **알려진 전사 착시:** 연주·간주 구간의 같은 말 반복 루프(예: "듯한 듯한 듯한…"), 곡 끝의 "감사합니다"·"자막 by …" 같은 문장, 마지막 후렴의 과잉 반복은 Whisper의 흔한 환각이다. 가창 오류로 단정하지 말고 문맥 재검사로 판별한다.
 - 바뀐 구절은 새 음원에서 위치를 찾고, 앞뒤 문맥(약 30초를 출발점)으로 재전사한다. 짧은 클립의 엉뚱한 결과는 가창 실패로 단정하지 않는다. 유리한 결과만 골라 통과시키지 않는다.
 - 판정을 나눈다: 입력·보존 / 악보 생성·재사용 / 파일 기술 검사 / 자동 전사상 확인 / 엇갈림·확인 필요 / 확인 불가·해당 없음 / 직접 청취(미실행이면 그렇게).
 - 한국어 내용의 자연스러움과 음원 전달 충실도는 별개 판정이다.

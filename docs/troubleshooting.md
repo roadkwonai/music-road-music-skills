@@ -15,7 +15,9 @@
 | `engines:list`에서 미설치로 나옴 | 임시 `ROADMUSIC_DATA_DIR`나 다른 프로필로 조회함 | 사용자 실제 프로필로 다시 읽는다. 설치는 요청이 있을 때만 |
 | 검사 뒤 Electron 프로세스가 남음 | `lyrics:clean`·`engines:list` 같은 서비스 명령이 서비스를 시작함 | 같은 `ROADMUSIC_DATA_DIR`로 `roadmusic cli:stop`. 초안 단계에서는 로컬 명령(`song:prepare`)만 쓴다 |
 | `job:wait`이 시간 초과 | 생성이 오래 걸림 | 같은 `jobId`로 다시 기다린다. 새로 제출하지 않는다 |
-| 응답에 `uncertain:true` | 연결이 끊겨 제출 여부가 불확실 | `service:status`·`queue:list`·`songs:list`로 확인 후 판단. 자동 재제출 금지 |
+| 응답에 `uncertain:true` | 연결이 끊겨 제출 여부가 불확실 | `service:status`·`queue:list --no-start`·`songs:list`로 확인 후 판단. 자동 재제출 금지 |
+| 상태만 보려 했는데 서비스가 뜸 | 일반 `cli:status`는 서비스를 시작한다 | `service:status` 또는 `--no-start`를 붙인다 |
+| 새 곡이 다른 프로젝트 폴더에 저장됨 | 앱에서 마지막으로 선택한 프로젝트에 저장된다 | 생성 전 `projects:create`→`projects:select`로 새 프로젝트를 선택한다 |
 | 곡이 생각보다 짧음 | 길이는 가사 분량과 자연 종료가 정함 | `truncated` 확인. 길이를 원하면 가사 분량을 조정(사용자 가사는 제안만) |
 | 괄호 안 말이 그대로 불림 | 가사 주석은 제어 채널이 아님 | 가사에서 주석을 빼고 의도는 style로 |
 | ffmpeg `Unable to parse "offset" option value "0.03inear=true"` | zsh가 `$OFF:l…`을 변수 수식어로 해석 | `${OFF}:linear=true`처럼 중괄호 |

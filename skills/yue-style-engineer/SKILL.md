@@ -27,7 +27,7 @@ description: YuE2 공식 가이드(장르·악기·보컬·언어·템포)와 �
 | --- | --- | --- |
 | 장르·분위기 한 줄 | `style` 또는 `parts.genre` | 둘 다 주면 `parts.genre`가 우선(`changes.style.overridden` 확인) |
 | 악기 | style 안 영어 악기명, 또는 `parts.instruments`(공개 목록 값) / `parts.instrumentation`(악기·role·technique·section) | 둘 중 하나만. 멀티트랙·볼륨·완전 배제 아님 |
-| 보컬 | style 또는 `parts.vocal`(≤8개) | 곡 전체 성향. 구간별 창법 고정 아님 |
+| 보컬 | style 또는 `parts.vocal`(≤8개) | 곡 전체 성향. 구간별 창법 고정 아님. 성량·고음 요청 예: `powerful female rock vocal`, `bright piercing high belting`, `wide vocal range`, `sustained high notes`, `raspy edge`. 실존 가수 비교 대신 이런 묘사를 쓰고, 고음이 어느 줄에서 나올지는 정할 수 없다 |
 | 전개·에너지 | `parts.dynamics` | `gradual build`, `chorus lift` |
 | 믹스 의도 | `parts.mix` | `lead vocal forward`. 믹서 값 아님 |
 | 템포 | `bpm`(40~220) 또는 `parts.bpm` | style에 `NN BPM` 추가(끝 또는 악기 요약 앞, 기존 BPM 문구는 대체). 정확한 템포 아님 |

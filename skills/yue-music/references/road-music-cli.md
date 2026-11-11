@@ -25,11 +25,13 @@ Windows PowerShell 예: `$env:ROAD_MUSIC_HOME="C:\path\to\music-road"; node "$en
 | 가사 정리·분량 | `lyrics:clean --json '{"text":"…"}'`, `lyrics:check --json '{"text":"…","targetSeconds":180}'` | 서비스 | 생성 준비 단계에서 |
 | style 조합 | `prompt:compose --json '{…}'` | 서비스 | 생성 준비 단계에서 |
 | 악보 검사(런타임) | `score:check --json '{"text":"<abc>"}'` | 서비스 + YuE 런타임 | 런타임이 없으면 실패 → `score:inspect`로 대체하고 `미실행(사유)` 보고 |
+| 프로젝트 | `projects:list`, `projects:create --json '{"name":"…"}'`, `projects:select --json '{"name":"…"}'` | 서비스 | 생성 준비 단계에서. select는 앱의 현재 프로젝트를 바꾼다 |
 | 생성 | `roadmusic song:generate --file song.json` → `jobId` | 서비스·모델 | **불가** |
 | 완료 확인 | `roadmusic job:wait --json '{"jobId":"…","timeoutMs":3600000}'` | 서비스 | 생성 후 |
 
 - `song:generate --events --wait`로 한 번에 기다릴 수도 있지만, 반환된 `jobId`를 같은 프로필의 `job:wait`으로 확인하는 것이 기본이다. `job:wait`이 시간 초과로 끝나면 같은 `jobId`로 다시 기다린다. 새로 제출하지 않는다.
-- `uncertain:true`면 재제출하지 않고 `service:status`(=`cli:status`, 자동 시작 없음)·`queue:list`·`songs:list`로 실행 여부부터 확인한다.
+- `uncertain:true`면 재제출하지 않고 `service:status`·`queue:list --no-start`·`songs:list`로 실행 여부부터 확인한다.
+- **서비스를 띄우지 않는 상태 확인:** `service:status`, 또는 아무 명령에 `--no-start`를 붙인다(서비스가 없으면 `ok:false`, `code:"connection"`). 일반 `cli:status`는 서비스를 **시작**한다(2026-11-12 실측).
 - 임시 `ROADMUSIC_DATA_DIR`로 서비스를 띄웠다면 작업 뒤 같은 값으로 `roadmusic cli:stop`을 실행해 정리한다.
 
 ## 생성 요청 JSON (`song:prepare`·`song:generate` 공통)
@@ -37,6 +39,7 @@ Windows PowerShell 예: `$env:ROAD_MUSIC_HOME="C:\path\to\music-road"; node "$en
 | 필드 | 값 | 비고 |
 | --- | --- | --- |
 | `title` | 문자열 ≤200 | 사람이 읽는 곡명. 원생 요청에는 전달되지 않음 |
+| `requestPrompt` | 문자열 | 사용자 요청 원문. `song:generate`가 실제 곡 폴더를 정한 뒤 제작 기록에 자동 연결한다(별도 `production:request` 불필요) |
 | `engine` | `"yue-mlx"` / `"yue"` | CLI 기본값은 `ace`이므로 **반드시 지정** |
 | `style` | 문자열 ≤2000 | 언어, 장르, 보컬, 악기, 선율·프레이징, (BPM) |
 | `lyrics` | 문자열 ≤20000 | 부를 말 + 구간 태그. 연주곡이면 생략 |

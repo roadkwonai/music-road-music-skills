@@ -15,11 +15,11 @@ roadmusic() { node "${ROAD_MUSIC_HOME:-/Users/freelife/youtube/music/music-road}
 
 | 알고 싶은 것 | 명령 |
 | --- | --- |
-| 앱·서비스 상태 | `roadmusic app:state`, `roadmusic cli:status`(`service:status` 별칭) |
+| 앱·서비스 상태 | `roadmusic service:status`(서비스를 시작하지 않음), `roadmusic app:state`(서비스 시작). 일반 `cli:status`는 서비스를 시작하므로 상태 확인에는 `service:status` 또는 `--no-start`를 붙인다 |
 | 프로젝트 | `roadmusic projects:list` |
 | 곡 목록(절대 `dir`) | `roadmusic songs:list` |
 | 곡 상세(요청·설정·파일) | `roadmusic song:detail --json '{"dir":"…"}'` |
-| 대기열 | `roadmusic queue:list` |
+| 대기열 | `roadmusic queue:list --no-start` |
 | 음악 그룹(작품) | `roadmusic works:list` |
 | 제작 기록·시간 | `roadmusic production:tasks --json '{"domain":"music"}'`, `roadmusic production:dashboard --json '{"domain":"music"}'` |
 
@@ -65,7 +65,7 @@ roadmusic() { node "${ROAD_MUSIC_HOME:-/Users/freelife/youtube/music/music-road}
 
 - 아이디어 목록은 사용자가 정한 파일(없으면 작업 폴더의 `IDEAS.md`)에 `제목 / 한 줄 콘셉트 / 장르 / 상태(대기·진행·보류)`로 적는다. 기존 파일은 덮어쓰지 않고 추가한다.
 - 아이디어를 실제 작업으로 옮길 때: `roadmusic projects:create --json '{"name":"…"}'`로 프로젝트를 만들고(사용자가 원할 때), 기획은 `yue-album-planner`로 넘긴다. 프로젝트를 만든다고 곡을 생성하지 않는다.
-- 제작 요청 원문은 Road Music 제작 기록 스킬로 남긴다(`production:request`).
+- 제작 요청 원문은 `song:generate`의 `requestPrompt`로 넘기면 Road Music이 실제 곡 폴더에 연결해 자동 기록한다. 생성이 아닌 요청(기획·가사만)을 기록할 때만 `production:request`를 쓴다.
 
 ## 이름 바꾸기·정리 (원본 rename, validate-album, import-*)
 

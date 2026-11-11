@@ -88,6 +88,33 @@ Codex는 참고 문서를 덜 열고 SKILL.md 본문 위주로 따른다. 1차�
 - **시험 서비스가 남음:** 서비스 명령이 임시 데이터 폴더로 Road Music 서비스를 띄운 뒤 남았다. 모두 정리했고, 규칙에 "같은 `ROADMUSIC_DATA_DIR`로 `cli:stop`"을 넣었다.
 - **ffmpeg 2패스 명령의 zsh 함정:** `$OFF:linear`가 변수 수식어로 해석됐다. `${OFF}`로 안내.
 
+## 6. 실제 생성 감사 (2026-11-12)
+
+스킬을 그대로 따라 실제 YuE2 곡을 만들며 절차를 감사했다. 요청: "성량 좋고 고음을 날카롭게 뽑아내는 여성 락보컬의 락발라드, 가사·프롬프트 전부 자동".
+
+| 단계 | 결과 |
+| --- | --- |
+| 환경 | 실제 프로필 `yue-mlx` 설치됨, M1 Ultra 64GB, 대기열 비어 있음 |
+| 프로젝트 | 앱의 현재 프로젝트가 다른 작업이어서 새 프로젝트 `여성 락보컬 락발라드 2026-11-12`를 만들어 선택 |
+| style | `Korean, powerful rock ballad, powerful female rock vocal, bright piercing high belting, wide vocal range, …, melodic guitar solo, 76 BPM` |
+| 검증 | `song:prepare` valid · advice 0, `lyrics:check` 추정 164초 → 목표 210초에 맞춰 기타 솔로 `[Interlude]` 추가, 자체 검수로 「맨 뒷줄까지 / 닿을 때까지」 중복을 「맨 뒷줄에」로 수정 |
+| 생성 | `song:generate`(requestPrompt 포함) → `job:wait`, 514초 만에 완료 |
+| 결과 | 268.1초 48kHz stereo FLAC, truncation 없음, 악보 75 BPM·명목 272초, -12.9 LUFS·트루피크 +0.2 dBFS(배포 전 마스터링 필요) |
+| 가사 반영 | Whisper large-v3-turbo 단일 계열 무유도 전곡 전사: 대부분 일치. 브리지("꺼질 듯 흔들려도 다시 불을 켜")는 전곡 전사에서 반복 루프로 나왔으나 30초 문맥 재검사에서 일치. 끝의 "감사합니다"·"자막 by …"는 전사 착시. "객석·정류장·쥐면·떨리는"은 엇갈림(확인 필요) |
+| 직접 청취 | 미실행 — 고음의 날카로움·성량은 사용자 청취로 판단 |
+
+감사에서 찾아 고친 스킬 결함:
+
+- **`cli:status`가 서비스를 시작한다.** 스킬은 "`service:status`(=`cli:status`, 자동 시작 없음)"이라고 적었지만 실측해 보니 `cli:status`는 서비스를 띄우고 `service:status`·`--no-start`만 띄우지 않는다. 상태 확인을 `service:status`·`queue:list --no-start`로 바꿨다.
+- **새 곡이 다른 프로젝트에 섞일 수 있다.** 생성은 앱에서 마지막으로 선택한 프로젝트에 저장된다. 생성 전 현재 프로젝트를 확인하고 새 곡이면 `projects:create`→`projects:select`하도록 관문에 넣었다.
+- **제작 기록 중복 위험.** `song:generate`의 `requestPrompt`가 요청 원문을 실제 곡 폴더에 자동 기록한다. 별도 `production:request`를 쓰라던 안내를 고쳤다.
+- **길이 맞추기.** `lyrics:check`의 `estimate`로 AI 가사 분량을 가늠하고, 모자라면 연주 구간을 넣을 수 있다고 안내했다.
+- **보컬 묘사 예.** 성량·고음 요청을 실존 가수 비교 없이 옮기는 style 예(`powerful female rock vocal`, `bright piercing high belting` 등)를 추가했다.
+- **결과 검수 보강.** `job:wait`의 `audio`가 MP3를 가리켜 원본 `audio.flac`으로 검사하도록, 트루피크가 0 dBFS를 넘으면 마스터링을 권하도록, 로컬 Whisper 무유도 전사·문맥 재검사 절차와 흔한 전사 착시를 넣었다.
+- **Codex가 생성 명령을 일부만 적음.** 프로젝트 선택·`job:wait`을 빠뜨려, 관문에 그대로 실행·기록할 생성 블록을 넣었다.
+
+같은 요청(생성 금지)으로 보완한 스킬을 다시 시험했다. Claude 19/19. Codex는 17/19였는데 원인은 테스트 하네스의 "정확한 명령만 적는다" 문구였다(프로젝트 선택·`job:wait`을 생략). 문구를 "생성 단계 전체를 순서대로"로 고치자 19/19.
+
 ## 결과 파일
 
 시나리오 테스트 산출물(`yue-music-workspace/`)은 개인 작업 기록이라 저장소와 Release에 넣지 않는다(`.gitignore`). 채점기·요청 목록은 [`evals/`](../evals/)에 있다.

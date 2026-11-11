@@ -30,7 +30,7 @@ roadmusic() { node "${ROAD_MUSIC_HOME:-/Users/freelife/youtube/music/music-road}
 
 ## 절차
 
-1. **요청 기록:** 실제 생성·수정 요청이면 접수 시점에 Road Music 제작 기록 스킬로 요청 원문을 남긴다(`production:request`, 로컬).
+1. **요청 기록:** 요청 JSON의 `requestPrompt`에 사용자 요청 원문을 넣는다. `song:generate`가 실제 곡 폴더를 정한 뒤 제작 기록에 자동 연결하므로 `production:request`를 따로 쓰지 않는다(생성 없는 기획·가사 요청만 따로 기록).
 2. **계약(로컬):** `roadmusic cli:version`, `roadmusic cli:update:check`(첫 연결 1회, 알리기만), `roadmusic cli:schema`, `roadmusic yue:capabilities --json '{"engine":"<엔진>"}'`.
 3. **요청 파일 작성:** 생성과 **같은** JSON을 파일로 만든다(예: 작업 폴더의 `song.json`). 원문 가사·style은 별도 파일이나 메모로 보존한다.
 4. **준비 1차(로컬):** `roadmusic song:prepare --file song.json`. `ok`·`valid`·`errors`·`notes`·`changes`·`officialGuide`·`effective`(advanced와 runtime)·`nativeRequest`를 읽는다. 초안만 모드의 정리 확인은 여기까지로 충분하다.
@@ -40,14 +40,25 @@ roadmusic() { node "${ROAD_MUSIC_HOME:-/Users/freelife/youtube/music/music-road}
 6. **준비 2차:** 보정한 파일로 다시 `song:prepare`. 남은 advice와 유지 이유를 기록한다.
 7. **기본값 확인:** `effective.advanced`가 기본값(full/melody CFG 1, off CFG 1.01, ODE 32 등)인지, `parts.strict`+`strong`으로 CFG 1.5가 되지 않았는지, `effective.runtime`(yue-mlx 8bit·16GiB 기본, 공식 BF16과 다름)을 확인해 보고에 적는다.
 8. **생성 준비 단계의 서비스 명령**(검토안을 보여주기 직전이나 승인 후, 초안만 모드 제외):
-   - 상태: `roadmusic app:state`, `roadmusic engines:list`, `roadmusic projects:list`, `roadmusic songs:list`. 다른 프로필·임시 데이터 폴더의 결과로 설치 상태를 대신하지 않는다.
-   - 가사: `roadmusic lyrics:clean --json '{"text":"<가사>"}'`로 정리 전후 비교, `roadmusic lyrics:check --json '{"text":"<가사>","targetSeconds":N}'`로 분량 참고. 추정 길이는 참고값이며 사용자 가사는 줄이거나 늘리지 않는다(AI 가사는 조정 가능).
+   - 상태: `roadmusic app:state`, `roadmusic engines:list`, `roadmusic projects:list`, `roadmusic queue:list --no-start`. 다른 프로필·임시 데이터 폴더의 결과로 설치 상태를 대신하지 않는다. 서비스가 떠 있는지만 볼 때는 `service:status`(일반 `cli:status`는 서비스를 시작한다).
+   - 프로젝트: `app:state.songsDir`·`projects:list.current`가 이 곡과 관계없는 다른 작업이면 새 프로젝트를 `projects:create`→`projects:select`로 만들고 선택한다(새 곡이 남의 프로젝트에 섞이지 않게). 같은 곡의 수정·재제작은 원래 프로젝트를 쓴다.
+   - 가사: `roadmusic lyrics:clean --json '{"text":"<가사>"}'`로 정리 전후 비교, `roadmusic lyrics:check --json '{"text":"<가사>","targetSeconds":N}'`로 분량 참고. 결과의 `estimate`(초)는 부르는 줄 기준의 거친 참고값이다(실측 예: 추정 164초 → 실제 268초. 실제 길이는 모델이 계획한 악보를 따른다). 목표보다 많이 짧으면 AI 가사는 구간을 더하거나 `[Interlude]` 같은 연주 구간을 넣어 조정할 수 있고, 사용자 가사는 줄이거나 늘리지 않고 차이만 보고한다.
    - style: `roadmusic prompt:compose`에 생성과 같은 값(`genre`=`parts.genre` 또는 `style`, `instruments`/`instrumentation`, `vocal`, `dynamics`, `mix`, `bpm`, 정리 가사, `instrumental`)을 넣어 최종 style·notes를 확인한다.
 9. **보고:** 모드에 따라
    - 기본 검토/부분 위임: [생성 전 검토안](../yue-music/references/report-template.md#생성-전-검토안-기본-검토-모드) + 언어 검수 결과 + `## YuE2 공식 가이드 보정 보고`를 한 번에 보여주고 "이 가사·프롬프트·옵션으로 생성할까요? 수정할 부분이 있으면 알려주세요."라고 묻고 멈춘다.
    - 초안만·수정만: 같은 자료를 주고 생성하지 않는다. 생성 명령은 "승인 후 실행할 명령"으로만 소개한다.
    - 전체 자동 위임·제공안 승인·지정 수정·재생성: 질문으로 멈추지 않고 10으로 간다. 다만 G4·G9의 의미 변경이 있으면 그 부분만 묻는다.
-10. **생성:** `roadmusic song:generate --file song.json` → 받은 `jobId`로 `roadmusic job:wait --json '{"jobId":"…"}'`. 시간 초과면 같은 `jobId`로 다시 기다린다. `uncertain:true`면 재제출하지 말고 `service:status`·`queue:list`·`songs:list`로 확인한다. 승인 수량(`count`)만 생성한다.
+10. **생성:** 아래 블록을 순서대로 실행한다(실행할 수 없는 환경이면 이 블록 전체를 "승인 후/사용자 PC에서 실행할 명령"으로 그대로 적는다. 일부만 적지 않는다).
+
+    ```bash
+    roadmusic projects:list                                   # current가 이 곡과 무관하면 다음 두 줄
+    roadmusic projects:create --json '{"name":"<곡 이름 YYYY-MM-DD>"}'
+    roadmusic projects:select --json '{"name":"<곡 이름 YYYY-MM-DD>"}'
+    roadmusic song:generate --file song.json                  # song.json에 requestPrompt 포함
+    roadmusic job:wait --json '{"jobId":"<받은 jobId>","timeoutMs":3600000}'
+    ```
+
+    세부: `roadmusic song:generate --file song.json` → 받은 `jobId`로 `roadmusic job:wait --json '{"jobId":"…"}'`. 시간 초과면 같은 `jobId`로 다시 기다린다. `uncertain:true`면 재제출하지 말고 `service:status`·`queue:list`·`songs:list`로 확인한다. 승인 수량(`count`)만 생성한다.
 11. **결과:** `yue-result-review`로 넘기고, 생성 시간·결과 파일을 1의 요청 기록에 연결한다. 임시 데이터 폴더로 서비스를 띄웠다면 같은 `ROADMUSIC_DATA_DIR`로 `roadmusic cli:stop`.
 
 `song:prepare`를 실행할 수 없는 환경(Road Music 미설치 등)에서는 정적 점검만 하고 보고서에 `미실행(사유)`을 적는다. 이때 생성으로 넘어가지 않는다.

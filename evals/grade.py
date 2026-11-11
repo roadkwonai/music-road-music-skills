@@ -156,6 +156,18 @@ def grade(eval_name, run_dir):
         a("실행했을 생성 명령(song:generate·job:wait)을 기록했다", gen_section and "song:generate" in cmds and "job:wait" in cmds, "섹션·명령 탐색")
         a("'정확히 3분'을 보장할 수 없다고 밝혔다", re.search(r"(3분|180)[^\n]{0,160}(보장|기록용|맞출 수 없|정확히 맞추)", resp), "문구 탐색")
         a("'힘차게' 의도를 style로 옮겼다", re.search(r"(powerful|energetic|driving|anthemic|uplifting|힘찬|high energy)", style, re.I), f"style={style[:160]}")
+    if eval_name.startswith("eval-5"):
+        a("JSON 엔진이 yue-mlx", final.get("engine") == "yue-mlx", f"engine={final.get('engine')}")
+        a("style에 Korean·여성 보컬·고음/벨팅 묘사가 있다", re.search(r"korean", style, re.I) and re.search(r"female", style, re.I) and re.search(r"(belt|high note|high-note|soaring|piercing)", style, re.I), f"style={style[:200]}")
+        a("style에 실존 가수 비교 문구가 없다", not re.search(r"(like |style of |inspired by )", user_style, re.I), "비교 문구 탐색")
+        a("requestPrompt에 사용자 요청 원문을 넣었다", isinstance(final.get("requestPrompt"), str) and "여성 락보컬" in final.get("requestPrompt", ""), f"requestPrompt={str(final.get('requestPrompt'))[:60]}")
+        a("새 프로젝트를 만들어 선택하는 단계를 포함했다", "projects:create" in cmds and "projects:select" in cmds, "commands.md 탐색")
+        a("일반 cli:status로 서비스를 띄우지 않았다", not re.search(r"cli:status(?![^\n]*--no-start)", cmds), "commands.md 탐색")
+        a("실행했을 생성 명령(song:generate·job:wait)을 기록했다", gen_section and "song:generate" in cmds and "job:wait" in cmds, "섹션·명령")
+        a("자동 위임이라 승인 질문으로 끝나지 않았다", not re.search(r"생성할까요", resp[-400:]), "끝부분")
+        a("고음·음색을 보장하지 않는다고 밝혔다", re.search(r"(고음|음색|가창)[^\n]{0,80}(보장|청취)", resp), "문구 탐색")
+        a("한국어 검수 판정을 적었다", re.search(r"(검토 완료|보완 필요|원문 보존·제안만|확인 불가)", resp), "판정어")
+        a("officialGuide advice가 0", prep.get("ok") and not advice, f"advice={advice}")
     json.dump({"expectations": E, "summary": {"passed": sum(e["passed"] for e in E), "failed": sum(not e["passed"] for e in E), "total": len(E), "pass_rate": round(sum(e["passed"] for e in E) / len(E), 3)}},
               open(os.path.join(run_dir, "grading.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     return E

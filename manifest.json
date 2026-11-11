@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "name": "music-road-music-skills",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": "roadkwonai/music-road-music-skills",
-  "releaseNotes": "release/2026-11-12-yue2-music-skills-0-1-0.md",
+  "releaseNotes": "release/2026-11-12-live-generation-audit-0-1-1.md",
   "roadMusic": {
     "cliVersion": "0.1.0",
     "protocolVersion": 2
