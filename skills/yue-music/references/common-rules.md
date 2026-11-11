@@ -121,6 +121,7 @@ YuE·`yue-mlx`의 프롬프트를 쓰거나 생성을 준비할 때마다(초안
 - 외부 전송·브라우저 열기·피드백 전송은 사용자의 명시적 요청 없이 하지 않는다.
 - 테스트·검증에서 데이터 폴더가 필요하면 `ROADMUSIC_DATA_DIR`를 임시 폴더로 분리하고, 그 폴더로 시작한 서비스는 끝나면 같은 `ROADMUSIC_DATA_DIR`로 `cli:stop`해 정리한다.
 - 곡·프로젝트 경로는 `songs:list`·`projects:list`가 돌려준 절대 경로를 그대로 쓴다. 기존 파일을 덮어쓰지 않으며 `--overwrite`는 사용자가 요청했을 때만 쓴다.
+- **작업 파일은 곡 보관 폴더 밖에:** 조사 기록, 수정 악보, 마스터, 납품물, 임시 요청 JSON은 Road Music 곡 보관 폴더(`app:state.songsDir`의 상위 Songs 폴더와 그 아래 프로젝트·곡 폴더) **밖**에 쓴다. `songs:list`는 프로젝트 폴더 안에서 오디오가 없는 하위 폴더를 정리(삭제)하고, 곡 폴더 안의 추가 `.wav`/`.mp3`는 곡 오디오로 잘못 집힐 수 있다. 사용자가 정한 곳이 없으면 Songs와 나란한 폴더(예: `~/Documents/YueStudio/Work/<곡>/`, 마스터는 `~/Documents/YueStudio/Masters/<곡>/`)를 쓴다.
 - `uncertain:true`면 재제출하지 말고 `service:status`·`queue:list --no-start`·`songs:list`로 실행 여부부터 확인한다.
 - 실제 생성·수정 요청은 Road Music 제작 기록 스킬(`skills/road-music-production-records`)을 적용한다. 생성·렌더·리플레이는 `requestPrompt`에 사용자 요청 원문을 넣으면 Road Music이 실제 곡 폴더에 연결해 자동 기록하므로 `production:request`를 따로 중복 기록하지 않는다.
-- **새 곡은 새 프로젝트에:** 생성 전에 `app:state`의 `songsDir`·`projects:list`의 `current`를 확인한다. 현재 프로젝트가 이 곡과 관계없는 다른 작업이면 새 프로젝트를 만들어(`projects:create`) 선택(`projects:select`)한 뒤 생성한다. 같은 곡의 수정·재제작은 원래 프로젝트를 쓴다. 선택은 앱의 현재 프로젝트를 바꾸므로 보고에 적는다. 저장공간 정리는 `skills/road-music-storage`의 미리보기·확인 절차로만 한다.
+- **새 곡은 새 프로젝트에:** 생성 전에 `app:state`의 `songsDir`·`projects:list`의 `current`를 확인한다. 현재 프로젝트가 이 곡과 관계없는 다른 작업이면 새 프로젝트를 만든 뒤 생성한다(`projects:create`는 만든 프로젝트를 바로 현재 프로젝트로 선택한다. 기존 프로젝트로 돌아갈 때만 `projects:select`). 같은 곡의 수정·재제작은 원래 프로젝트를 쓴다. 선택은 앱의 현재 프로젝트를 바꾸므로 보고에 적는다. 저장공간 정리는 `skills/road-music-storage`의 미리보기·확인 절차로만 한다.

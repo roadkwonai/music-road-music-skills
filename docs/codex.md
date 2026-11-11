@@ -17,7 +17,9 @@ codex exec --skip-git-repo-check --ephemeral -s read-only \
   "Do not run commands. List every available skill whose name starts with 'yue-'."
 ```
 
-2026-11-12에 codex-cli 0.167.0에서 심볼릭 링크로 설치한 13개 스킬을 모두 인식하는 것을 확인했다.
+2026-11-12에 codex-cli 0.167.0에서 심볼릭 링크로 설치한 스킬을 모두 인식하는 것을 확인했다. `yue-skills-update`의 확인 스크립트는 링크를 따라 실제 묶음 루트의 `VERSION`을 읽는다.
+
+Codex `workspace-write` 샌드박스에서는 Road Music 서비스 소켓 연결이 막힐 수 있다(`EPERM`). 이때 스킬은 서비스 명령 결과를 `확인 불가`로 적고 로컬 명령·제작 기록만으로 답한다.
 
 ## 부르는 법
 

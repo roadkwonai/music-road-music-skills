@@ -14,6 +14,10 @@ Suno용 음악 스킬 묶음을 YuE2 공식 가이드와 Road Music CLI에 맞�
 3. Suno 자료·프롬프트를 받았으면 [Suno→YuE2 대응표](references/suno-to-yue2.md).
 4. CLI 명령·필드·`officialGuide` 읽는 법은 [Road Music CLI 연결](references/road-music-cli.md), 보고 형식은 [보고 형식](references/report-template.md).
 
+## 0. 스킬 업데이트 확인 (세션당 한 번)
+
+Road Music CLI의 `cli:update:check`처럼, 이 세션에서 yue-* 스킬을 처음 쓸 때 한 번 `node "<yue-skills-update 폴더>/scripts/check-update.mjs"`(12시간 캐시, 읽기 전용)를 실행한다. `status`가 `update-available`·`same-version-different-commit`이면 현재·최신 버전과 Release 링크를 한 줄로 알리고 요청 작업을 계속한다. 업데이트는 사용자가 원할 때 `yue-skills-update` 절차로만 한다. 확인 실패는 묻지 않으면 알리지 않는다.
+
 ## 1. 요청 해석
 
 - 엔진·곡 수·언어·장르·보컬·길이·수정 범위를 정한다. 엔진은 사용자가 고른 값(`yue-mlx`/`yue`)을 유지하고, 미지정이면 환경에 맞는 값을 가정값으로 표시한다.
@@ -37,6 +41,7 @@ Suno용 음악 스킬 묶음을 YuE2 공식 가이드와 Road Music CLI에 맞�
 | 권리·라이선스·차용·메타데이터·아트·홍보 문구·배포 점검 | `yue-release` | release-director, promo-writer, promo-reviewer, album-art-director, plagiarism-checker, explicit-checker |
 | 이어 하기·다음 단계·진행 현황·아이디어·이름 변경 | `yue-project-status` | resume, next-step, album-dashboard, album-ideas, promote-idea, new-album, rename, validate-album, import-* |
 | 작업 환경 점검·처음 사용 안내 | `yue-setup-check` | session-start, setup, configure, health-check, help, tutorial, about |
+| 이 스킬 묶음의 최신 Release 확인·업데이트 | `yue-skills-update` | (원본에 없음, Road Music `cli:update:check`에 대응) |
 
 단일 곡의 기본 순서: 가사(`yue-lyric-writer`, 사용자가 가사를 줬으면 건너뜀) → style(`yue-style-engineer`) → 검수(`yue-lyric-reviewer`) → 관문·준비·보고(`yue-pre-generation-check`) → 승인 → `song:generate` → `job:wait` → `yue-result-review`.
 

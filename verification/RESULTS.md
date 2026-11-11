@@ -1,6 +1,6 @@
 # 예시 요청 검증 결과
 
-- 실행 시각: 2026-11-11T18:15:05.025Z
+- 실행 시각: 2026-11-11T18:43:51.061Z
 - Road Music CLI: 0.1.0 (app 0.1.0, protocol 2)
 - 명령: `song:prepare --file examples/<파일>` (모델·서비스 없이 로컬 검증, 음악 생성 없음), `yue:capabilities`(읽기 전용)
 - 데이터 폴더: `ROADMUSIC_DATA_DIR`를 임시 폴더로 분리

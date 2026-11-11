@@ -102,5 +102,6 @@ YuE MLX로 한국어 여성 보컬 발라드 1곡 준비해줘. 이별 후 혼�
 
 ## 5. 업데이트·제거
 
-- 업데이트: 저장소 링크 설치면 `git -C ~/music-road-music-skills pull`. Release 설치면 새 ZIP을 받아 체크섬 확인 후 교체한다. 최신 버전은 [Releases](https://github.com/roadkwonai/music-road-music-skills/releases)와 [릴리스 노트](../release/README.md).
+- 업데이트 확인: 스킬을 처음 쓸 때 `yue-skills-update`가 자동으로 최신 Release를 확인해 알려 준다. 직접 확인은 `node ~/music-road-music-skills/skills/yue-skills-update/scripts/check-update.mjs --force`.
+- 업데이트: 저장소 링크 설치면 `git -C ~/music-road-music-skills pull --ff-only`. Release 설치면 새 ZIP을 받아 체크섬 확인 후 교체한다. 최신 버전은 [Releases](https://github.com/roadkwonai/music-road-music-skills/releases)와 [릴리스 노트](../release/README.md).
 - 제거: `~/.claude/skills/yue-*`, `~/.codex/skills/yue-*` 링크만 지운다. 저장소·Road Music·곡은 그대로다.

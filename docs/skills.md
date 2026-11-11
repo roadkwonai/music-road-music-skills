@@ -2,7 +2,7 @@
 
 [README](../README.md) · [작업 흐름](workflow.md) · [원본 대응표](upstream-coverage.md)
 
-13개 스킬 모두 [공통 규칙](../skills/yue-music/references/common-rules.md)을 따른다. "CLI"는 주로 쓰는 Road Music 명령이며, **로컬**은 서비스 없이 실행되고 **서비스**는 Road Music 백그라운드 서비스를 시작한다.
+14개 스킬 모두 [공통 규칙](../skills/yue-music/references/common-rules.md)을 따른다. "CLI"는 주로 쓰는 Road Music 명령이며, **로컬**은 서비스 없이 실행되고 **서비스**는 Road Music 백그라운드 서비스를 시작한다.
 
 ## 진입
 
@@ -89,6 +89,12 @@
 - **언제:** "이어서", "어디까지 했지", "다음 뭐 해", 곡 이름을 말할 때.
 - **핵심:** `songs:list`·`song:detail`·`production:*`로 읽고 다음 단계 하나를 추천, 진행 현황 표, 아이디어·프로젝트, 이름 변경.
 - **원본:** resume, next-step, album-dashboard, album-ideas, promote-idea, new-album, rename, validate-album, import-*.
+
+### `yue-skills-update` — 스킬 업데이트 확인
+
+- **언제:** yue-* 스킬을 처음 쓸 때 자동(세션당 한 번, 12시간 캐시), "스킬 업데이트", "최신 버전이야?".
+- **핵심:** `scripts/check-update.mjs`가 설치 `VERSION`·git 커밋과 GitHub 최신 Release·태그 커밋을 비교해 `status`(up-to-date / update-available / same-version-different-commit 등)를 낸다. 알림만 하고, 업데이트는 요청 시 git `pull --ff-only` 또는 Release ZIP 체크섬 확인 후 새 폴더 교체.
+- **원본:** 없음(Road Music `cli:update:check` 대응).
 
 ### `yue-setup-check` — 환경 점검·안내
 

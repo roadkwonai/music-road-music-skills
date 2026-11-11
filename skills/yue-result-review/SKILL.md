@@ -11,9 +11,9 @@ description: Road Music YuE2(yue-mlx/yue) 생성 완료 후 결과를 검수하�
 
 1. `job:wait` 결과와 `songs:list`/`song:detail`의 절대 경로로 실제 파일을 찾는다.
 2. 실제 worker의 엔진·모델/VAE·runtime, 요청/정리/전달 가사, style·cot·seed·실효 설정을 승인안과 대조한다.
-3. `result.json`의 `status`와 **`truncated.abc`·`truncated.semantic`을 각각** 확인한다. 둘 중 하나라도 참이면 재생 가능해도 완주로 채택하지 않는다.
+3. **`truncated.abc`·`truncated.semantic`을 각각** 확인한다. 둘 중 하나라도 참이면 재생 가능해도 완주로 채택하지 않는다. 생성 직후에는 `job:wait` 결과의 `song.truncated`, 이후에는 `song:detail`(곡 `meta.json`)의 `truncated`로 읽는다. 완료 곡의 최상위 `result.json`은 Road Music이 정리하며 지우므로, 원본 `result.json`이 필요하면 `meta.attempt`(MLX는 곡 폴더의 `yue-mlx/`) 아래에서 찾는다.
 4. 실제 길이·포맷(48kHz stereo)·전체 디코딩·끝맺음. `targetSeconds`와 실제 길이를 나란히 적는다(차이는 정상일 수 있음). 실제 길이는 생성된 악보 계획을 따르므로 `score:inspect`의 `nominal_duration_seconds`와 비교하면 원인을 알기 쉽다.
-   - **원본 파일로 검사:** `job:wait` 결과의 `audio`·`mp3`는 납품용 MP3를 가리킬 수 있다. 기술 검사·전사는 곡 `dir`의 원본 `audio.flac`으로 한다.
+   - **원본 파일로 검사:** `job:wait` 결과의 `audio`·`mp3`는 납품용 MP3를 가리킬 수 있다. 기술 검사·전사는 곡 `dir`의 가장 원본에 가까운 파일로 한다. `yue-mlx`는 무손실 `audio.flac`을 남기고, Windows `yue`는 `audio.wav`만 쓰며, 설정에 따라 MP3만 남기도 한다. `ffprobe`로 코덱을 확인해 적는다.
    - **결과 필드:** `song.seconds`(실제 길이), `song.truncated`, `song.timing`(abc·semantic·acoustic 단계별 시간), `song.source`(모델·VAE·런타임 리비전), `song.runtime`(정밀도)을 보고에 옮긴다.
    - **라우드니스·피크:** `ffmpeg -i audio.flac -af ebur128=peak=true -f null -`로 통합 LUFS·트루피크를 잰다. YuE2 원본은 트루피크가 0 dBFS를 넘을 수 있으므로(2026-11-12 실측 +0.2 dBFS) 업로드·배포 전에는 `yue-mastering`을 권한다. 원본은 고치지 않는다.
 5. 원본 FLAC·악보·artifact를 보존한다. MP3는 별도 납품 변환.

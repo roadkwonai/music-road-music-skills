@@ -90,6 +90,71 @@ def grade_mastering(run_dir, resp, cmds, a, E):
     return finish(run_dir, E)
 
 
+SCORE_SRC = "/Users/freelife/Documents/YueStudio/Songs/여성 락보컬 락발라드 2026-11-12/20261111180413_끝까지 부를게/score.abc"
+STATE_CHANGING = re.compile(r"road-music\.js\S*\s+(projects:create|projects:select|song:rename|songs:import|song:export|album:export|storage:[a-z-]+|production:task-[a-z]+|production:request|song:generate|song:render|song:resume|song:replay|engines:install|setup:run|cli:update:install|service:start|cli:status(?![^\n]*--no-start))")
+
+
+def score_compare(src, cand, inv):
+    with tempfile.TemporaryDirectory() as tmp:
+        env = {**os.environ, "ROADMUSIC_DATA_DIR": tmp}
+        r = subprocess.run(["node", CLI, "score:compare", "--json", json.dumps({"source": {"file": src}, "candidate": {"file": cand}, "invariants": inv})], capture_output=True, text=True, env=env)
+        try:
+            return json.loads(r.stdout.strip().splitlines()[-1])
+        except Exception:
+            return {"ok": False}
+
+
+def grade_later(eval_name, run_dir, resp, cmds, a, E):
+    import hashlib
+    ran = cmds.split("실행했을")[0]
+    bad = STATE_CHANGING.findall(ran)
+    a("상태를 바꾸거나 생성하는 명령을 실행하지 않았다", not bad, f"{bad}")
+    a("응답이 있다", len(resp) > 300, f"{len(resp)}자")
+    out = os.path.join(run_dir, "outputs")
+    n = eval_name.split("-")[1]
+    if n == "6":
+        src = os.path.join(run_dir, "inputs", "score.abc")
+        same = hashlib.sha256(open(src, "rb").read()).hexdigest() == hashlib.sha256(open(SCORE_SRC, "rb").read()).hexdigest()
+        a("입력 원본 악보를 바꾸지 않았다", same, "해시 비교")
+        cands = [os.path.abspath(p) for p in glob.glob(os.path.join(out, "**", "*.abc"), recursive=True) if hashlib.sha256(open(p, "rb").read()).hexdigest() != hashlib.sha256(open(SCORE_SRC, "rb").read()).hexdigest()]
+        a("수정 악보를 새 파일로 만들었다", cands, f"{[os.path.basename(p) for p in cands]}")
+        if cands:
+            m = score_compare(SCORE_SRC, cands[0], {"melody": True, "form": True})
+            a("수정 악보가 보컬 선율·형식을 보존한다(score:compare)", m.get("ok") and m["result"]["match"], f"{m.get('result', m)}"[:200])
+            h = score_compare(SCORE_SRC, cands[0], {"melody": True, "harmony": True})
+            a("화성이 실제로 바뀌었다", h.get("ok") and not h["result"]["match"], f"{h.get('result', h)}"[:200])
+        a("score:inspect·score:compare로 검사했다", "score:inspect" in cmds and "score:compare" in cmds, "commands.md")
+        a("가사·style이 그대로면 song:render 경로를 안내했다", "song:render" in resp, "응답 탐색")
+    if n == "7":
+        src = glob.glob(os.path.join(out, "**", "SOURCES.md"), recursive=True)
+        txt = read(src[0]) if src else ""
+        a("SOURCES.md를 만들었다", src, f"{src[:1]}")
+        a("출처 링크가 3개 이상", len(re.findall(r"\]\(https?://", txt)) >= 3, f"{len(re.findall(r'\]\(https?://', txt))}개")
+        a("사람 확인 대기 상태를 표시했다", re.search(r"확인 대기|❌", txt + resp), "탐색")
+        a("1443·1446 연도를 다뤘다", "1443" in resp and "1446" in resp, "탐색")
+        a("가사를 쓰지 않았다", not re.search(r"(?m)^\[(Verse|Chorus)\]\s*$", resp), "단독 구간 태그 줄 탐색")
+    if n == "8":
+        a("코드 라이선스와 모델 라이선스를 구분했다", re.search(r"모델[^\n]{0,40}라이선스", resp) and re.search(r"(CC BY-NC|Apache|코드)", resp), "탐색")
+        a("개인 창작자 수익화 조건을 다뤘다", re.search(r"개인[^\n]{0,60}(수익|창작자)", resp), "탐색")
+        a("AI 생성 고지를 안내했다", re.search(r"AI[^\n]{0,40}(고지|공개|표시|사용)", resp), "탐색")
+        a("업로드를 하지 않았다고 밝혔다", re.search(r"(업로드|게시)[^\n]{0,30}(하지 않|안 했|사용자|직접)", resp), "탐색")
+        a("마스터 음원 수치를 확인했다", re.search(r"[-−]14(\.0)? ?LUFS", resp), "탐색")
+    if n == "9":
+        a("해당 곡을 찾았다", "끝까지 부를게" in resp, "탐색")
+        a("잘림 여부를 보고했다", re.search(r"(truncat|잘림|잘리지|끊기지)", resp), "탐색")
+        a("다음 단계로 청취를 추천했다", re.search(r"(들어|청취)", resp), "탐색")
+        a("일반 cli:status를 쓰지 않았다", not re.search(r"cli:status(?![^\n]*--no-start)", ran), "commands.md")
+    if n == "10":
+        a("5곡 표를 만들었다", all(re.search(rf"\|\s*{i}\s*\|", resp) for i in range(1, 6)), "표 행 탐색")
+        a("곡별 요청 JSON 5개", len([p for p in glob.glob(os.path.join(out, "*.json")) if re.search(r"track|song", os.path.basename(p)) and "prep" not in os.path.basename(p)]) >= 5, "파일 수")
+        a("생성을 실행하지 않았다(초안)", "song:generate" not in ran, "commands.md")
+    if n == "11":
+        a("yue-mlx 상태를 보고했다", "yue-mlx" in resp, "탐색")
+        a("일반 cli:status를 쓰지 않았다", not re.search(r"cli:status(?![^\n]*--no-start)", ran), "commands.md")
+        a("바로 만들 수 있는지 답했다", re.search(r"(바로|지금)[^\n]{0,40}(만들|생성)", resp), "탐색")
+    return finish(run_dir, E)
+
+
 def grade(eval_name, run_dir):
     out = os.path.join(run_dir, "outputs")
     resp, cmds = read(os.path.join(out, "response.md")), read(os.path.join(out, "commands.md"))
@@ -118,6 +183,8 @@ def grade(eval_name, run_dir):
 
     if eval_name.startswith("eval-4"):
         return grade_mastering(run_dir, resp, cmds, a, E)
+    if eval_name.split("-")[1] in {"6", "7", "8", "9", "10", "11"}:
+        return grade_later(eval_name, run_dir, resp, cmds, a, E)
     a("응답에 '## YuE2 공식 가이드 보정 보고' 절이 있다", "## YuE2 공식 가이드 보정 보고" in resp, "제목 존재" if "## YuE2 공식 가이드 보정 보고" in resp else "제목 없음")
     hdr = re.search(r"\|\s*항목\s*\|\s*원래 입력\s*\|\s*보정 후\s*\|\s*공식 근거\s*\|\s*적용\s*\|", resp)
     a("보정 전후 표(항목/원래 입력/보정 후/공식 근거/적용)가 있다", hdr, "표 머리글 발견" if hdr else "표 머리글 없음")

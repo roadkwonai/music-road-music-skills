@@ -14,7 +14,8 @@ description: Road Music YuE2로 여러 곡(앨범·EP·플레이리스트용 묶
 3. **사운드 방향:** 공통 장르·편성 축과 곡별 변주. 곡마다 style을 공식 순서(언어, 장르, 보컬, 악기, 선율·프레이징, BPM)로 쓴다. 장르가 다른 곡은 **별도 요청**이며 `count`로 묶지 않는다.
 4. **순서와 에너지:** 첫 곡은 정체성을 빨리 보여주고, 중반에 가장 강한 곡을 두고, 템포·에너지가 3곡 이상 연속 같지 않게 배치한다. BPM은 의도값이며 실제 템포는 보장되지 않는다.
 5. **구성:** 곡별 구간 계획(`[Verse]→[Chorus]→…`). 목표 길이는 기록용이므로 길이를 맞추려 가사를 자르지 않는다.
-6. **곡별 요청 초안:** 곡마다 `title`·`engine`·`style`(또는 `parts`)·`lyrics`·`bpm`·`cot:"full"`·`seed`·`count:1`. 가사는 `yue-lyric-writer`, style은 `yue-style-engineer`.
+6. **곡별 요청 초안:** 가사를 쓰기 전에는 `song:prepare`가 가사 없음으로 입력을 거부한다. style만 점검하려면 `"lyrics":"[Verse]\n라라라"` 같은 임시 가사를 넣은 **점검용 사본**으로 돌리고 결과에 임시 가사였다고 적는다(`instrumental:true` 사본은 무보컬 문구가 붙고 보컬·언어 점검이 빠지므로 보컬곡 점검에 맞지 않다). 실제 요청 파일에는 임시 가사를 남기지 않는다.
+   요청 내용: 곡마다 `title`·`engine`·`style`(또는 `parts`)·`lyrics`·`bpm`·`cot:"full"`·`seed`·`count:1`. 가사는 `yue-lyric-writer`, style은 `yue-style-engineer`.
 7. **확인:** 전 곡의 제목 목록을 함께 읽어 주제·표현 중복을 점검(`yue-lyric-reviewer`)하고, 곡별로 `yue-pre-generation-check`를 거친다.
 
 ## 출력

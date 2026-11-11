@@ -55,6 +55,7 @@
 | Cover(오디오 업로드) | 공식: SheetSage2 전사 → 사람이 검토한 멜로디 ABC → 코드 제거 → `cot:"melody"`(화성까지 유지하면 full 전사 + `cot:"full"`) | Road Music: 별도 SheetSage2 환경이 있을 때 `score:transcribe`(`audio`·`output`·`python`·`modelDir` 절대 경로 필수, `task` 기본 `melody-full`은 이미 코드 없는 선율) → 필요 시 `score:strip-chords`(`voice`로 한 성부 선택) → `abc`. 절차는 `yue-score-editor`. `coverAudio`·`recording`은 ACE 전용. 원곡 가수 음색·파형 보존 아님. 원곡 권리 확인 |
 | Extend / Replace Section / Song Editor(구간 재생성) | **대응 없음**(로컬 인페인팅 없음) | 수정은 새 전체 생성. 원문 유지 악보 수정은 `song:render`, 가사·style 변경은 새 `song:prepare`→`song:generate` |
 | Stems 다운로드 | **대응 없음** | ABC `Vocal`/`Ins`는 스템이 아니다 |
+| (원본 sheet-music-publisher) 악보 PDF·출판 | **CLI 대응 없음** | `song:score`로 `score.abc`만 읽을 수 있다. 생성 계획이지 음원 채보가 아니다(`yue-score-editor`) |
 | Suno 웹에 붙여넣기(clipboard) | `song:generate --file song.json` | 승인 후에만 |
 | Generation Log(트랙 md) | `songs:list`, `song:detail`, 제작 기록 스킬 | |
 | 재생성(비결정성에 기대어 다시 돌리기) | `docs/music-review.md#retry-value` 판단 후 | 순이득 근거 없는 반복을 권하지 않는다 |

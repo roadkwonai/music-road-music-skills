@@ -71,3 +71,17 @@ test('예시 요청에 YuE2에 없는 필드가 없고 기대값이 짝을 이�
     assert.ok(['yue', 'yue-mlx'].includes(body.engine), `${file}: engine 명시`)
   }
 })
+
+test('업데이트 확인 스크립트가 오프라인에서도 설치 버전을 JSON으로 보고한다', () => {
+  const os = require('node:os')
+  const { spawnSync } = require('node:child_process')
+  const cache = fs.mkdtempSync(path.join(os.tmpdir(), 'yue-update-cache-'))
+  try {
+    const r = spawnSync('node', [path.join(root, 'skills', 'yue-skills-update', 'scripts', 'check-update.mjs'), '--offline'], { encoding: 'utf8', env: { ...process.env, XDG_CACHE_HOME: cache } })
+    assert.equal(r.status, 0, r.stderr)
+    const out = JSON.parse(r.stdout.trim())
+    assert.equal(out.current, read('VERSION').trim())
+    assert.equal(out.status, 'check-failed')
+    assert.equal(out.available, false)
+  } finally { fs.rmSync(cache, { recursive: true, force: true }) }
+})

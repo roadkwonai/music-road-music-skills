@@ -34,6 +34,54 @@
       "expected_output": "전체 자동 위임: yue-mlx 유지, 강한 여성 락보컬 고음 묘사 style(긍정형), requestPrompt, 새 프로젝트 선택, 생성·job:wait 명령, 승인 질문 없음, 보정 보고, 고음·길이 비보장",
       "files": [],
       "assertions": []
+    },
+    {
+      "id": 6,
+      "prompt": "방금 만든 「끝까지 부를게」 후렴 화성을 좀 더 어둡고 애절한 마이너 느낌으로 바꾸고 싶어. 보컬 선율은 음 높이랑 리듬 그대로 둬야 해. 수정한 악보만 만들어서 보여주고 생성은 아직 하지 마. 원래 악보: {IN}/score.abc, 원래 요청: {IN}/song.json, 곡 폴더(읽기 전용 참고): /Users/freelife/Documents/YueStudio/Songs/여성 락보컬 락발라드 2026-11-12/20261111180413_끝까지 부를게",
+      "expected_output": "eval-6-score-edit-darker-chorus",
+      "files": [],
+      "profile": "read",
+      "assertions": []
+    },
+    {
+      "id": 7,
+      "prompt": "세종대왕의 한글 창제 이야기를 담은 곡을 YuE MLX로 만들고 싶어. 가사 쓰기 전에 연도나 사실관계부터 제대로 조사해서 정리해줘. 가사랑 생성은 아직이야.",
+      "expected_output": "eval-7-research-hangul-song",
+      "files": [],
+      "profile": "temp",
+      "assertions": []
+    },
+    {
+      "id": 8,
+      "prompt": "「끝까지 부를게」 유튜브에 올리려고 해. 나는 개인 창작자고 수익 창출도 켤 생각이야. 올리기 전 점검이랑 설명란 문구, 메타데이터 정리해줘. 업로드는 내가 할게. 마스터 파일: {IN}/master.mp3, 원래 요청: {IN}/song.json",
+      "expected_output": "eval-8-release-youtube-check",
+      "files": [],
+      "profile": "temp",
+      "assertions": []
+    },
+    {
+      "id": 9,
+      "prompt": "어제 만든 여성 락보컬 락발라드 어디까지 했지? 다음에 뭐 하면 돼?",
+      "expected_output": "eval-9-project-status-resume",
+      "files": [],
+      "profile": "real",
+      "assertions": []
+    },
+    {
+      "id": 10,
+      "prompt": "퇴근길을 주제로 한 5곡짜리 EP를 YuE MLX로 기획해줘. 장르는 섞어도 되고 가사는 아직 안 써도 돼. 곡별로 바로 쓸 수 있게 정리해줘.",
+      "expected_output": "eval-10-album-plan-commute-ep",
+      "files": [],
+      "profile": "temp",
+      "assertions": []
+    },
+    {
+      "id": 11,
+      "prompt": "YuE2 작업 환경 점검해줘. 지금 바로 곡 만들 수 있는 상태야?",
+      "expected_output": "eval-11-setup-check",
+      "files": [],
+      "profile": "real",
+      "assertions": []
     }
   ]
 }

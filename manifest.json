@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "name": "music-road-music-skills",
-  "version": "0.1.2",
+  "version": "0.1.0",
   "repository": "roadkwonai/music-road-music-skills",
-  "releaseNotes": "release/2026-11-12-mastering-dynamic-fallback-0-1-2.md",
+  "releaseNotes": "release/2026-11-12-yue2-music-skills-0-1-0.md",
   "roadMusic": {
     "cliVersion": "0.1.0",
     "protocolVersion": 2
@@ -90,6 +90,12 @@
       "id": "yue-setup-check",
       "path": "skills/yue-setup-check",
       "displayName": "YuE2 환경 점검",
+      "guide": "docs/skills.md"
+    },
+    {
+      "id": "yue-skills-update",
+      "path": "skills/yue-skills-update",
+      "displayName": "YuE2 스킬 업데이트",
       "guide": "docs/skills.md"
     }
   ]

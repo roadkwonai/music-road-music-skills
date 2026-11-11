@@ -11,7 +11,8 @@ Suno용으로 만들어진 [claude-ai-music-skills](https://github.com/bitwize-m
 | 대상 엔진 | `yue-mlx`(Apple Silicon, 커뮤니티 MLX 포트) · `yue`(Windows NVIDIA, 공식 YuE2 워커) |
 | 기준 | YuE2 공식 `yue2-v0.1.6` 고정판, 공식 main(2026-11-01), Road Music CLI 0.1.0(protocol 2) |
 | 에이전트 | Claude Code, Codex(codex-cli 0.167.0에서 확인) |
-| 스킬 | 13개 ([레퍼런스](docs/skills.md)) |
+| 스킬 | 14개 ([레퍼런스](docs/skills.md)) |
+| 버전 | 0.1.0 — 실제 배포 전까지 0.1.0 유지·재게시, 스킬 사용 시 최신 Release 자동 확인 |
 | 라이선스 | MIT ([LICENSE](LICENSE)) |
 
 ---
@@ -47,7 +48,7 @@ Suno에서 쓰던 프롬프트도 그대로 붙여 넣으면 원문은 보존하
 
 자세한 규칙은 [공통 규칙](skills/yue-music/references/common-rules.md)에 있습니다.
 
-## 스킬 13개
+## 스킬 14개
 
 | 단계 | 스킬 | 하는 일 | 원본 대응 |
 | --- | --- | --- | --- |
@@ -63,7 +64,8 @@ Suno에서 쓰던 프롬프트도 그대로 붙여 넣으면 원문은 보존하
 | 후처리 | [`yue-mastering`](skills/yue-mastering/SKILL.md) | 원본 보존 마스터링·QC·내보내기 | mastering-engineer, mix-engineer |
 | 공개 | [`yue-release`](skills/yue-release/SKILL.md) | 권리·라이선스·AI 고지·메타데이터·아트·홍보 문구 | release-director, promo-*, album-art-director, plagiarism-checker |
 | 관리 | [`yue-project-status`](skills/yue-project-status/SKILL.md) | 이어 하기·다음 단계·진행 현황·이름 변경 | resume, next-step, album-dashboard 외 |
-| 점검 | [`yue-setup-check`](skills/yue-setup-check/SKILL.md) | CLI·엔진·지원 범위 읽기 전용 점검, 처음 사용 안내 | session-start, setup, health-check, tutorial 외 |
+| 점검 | [`yue-setup-check`](skills/yue-setup-check/SKILL.md) | CLI·엔진·지원 범위 점검, 처음 사용 안내 | session-start, setup, health-check, tutorial 외 |
+| 업데이트 | [`yue-skills-update`](skills/yue-skills-update/SKILL.md) | 스킬을 쓸 때 최신 GitHub Release 확인·알림, 요청 시 업데이트 | (Road Music `cli:update:check` 대응) |
 
 원본 53개 스킬과 참고 문서·도구를 하나씩 어떻게 처리했는지는 [원본 전수 대응표](docs/upstream-coverage.md)에 있습니다.
 
@@ -94,6 +96,14 @@ export ROAD_MUSIC_HOME=/path/to/music-road
 ```
 
 Release ZIP 설치, Windows, 업데이트·제거는 [시작하기](docs/getting-started.md)를 보세요.
+
+### 업데이트
+
+Road Music CLI의 `cli:update:check`처럼, yue-* 스킬을 처음 쓸 때 `yue-skills-update`가 GitHub 최신 Release를 확인(12시간 캐시)해 새 버전이 있으면 알려 줍니다. 업데이트는 "스킬 업데이트해줘"라고 할 때만 합니다(git 설치본은 `git pull --ff-only`, ZIP 설치본은 체크섬 확인 후 새 폴더로 교체). 직접 확인하려면:
+
+```bash
+node ~/music-road-music-skills/skills/yue-skills-update/scripts/check-update.mjs --force
+```
 
 ## 문서
 

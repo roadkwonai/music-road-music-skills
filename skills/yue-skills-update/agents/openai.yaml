@@ -1,0 +1,4 @@
+interface:
+  display_name: "YuE2 스킬 업데이트"
+  short_description: "이 스킬 묶음의 최신 GitHub Release 확인과 업데이트 안내"
+  default_prompt: "$yue-skills-update YuE2 스킬 묶음이 최신 버전인지 확인해줘."

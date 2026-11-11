@@ -25,7 +25,9 @@ Windows PowerShell 예: `$env:ROAD_MUSIC_HOME="C:\path\to\music-road"; node "$en
 | 가사 정리·분량 | `lyrics:clean --json '{"text":"…"}'`, `lyrics:check --json '{"text":"…","targetSeconds":180}'` | 서비스 | 생성 준비 단계에서 |
 | style 조합 | `prompt:compose --json '{…}'` | 서비스 | 생성 준비 단계에서 |
 | 악보 검사(런타임) | `score:check --json '{"text":"<abc>"}'` | 서비스 + YuE 런타임 | 런타임이 없으면 실패 → `score:inspect`로 대체하고 `미실행(사유)` 보고 |
-| 프로젝트 | `projects:list`, `projects:create --json '{"name":"…"}'`, `projects:select --json '{"name":"…"}'` | 서비스 | 생성 준비 단계에서. select는 앱의 현재 프로젝트를 바꾼다 |
+| 프로젝트 | `projects:list`, `projects:create --json '{"name":"…"}'`(만든 프로젝트를 바로 선택), `projects:select --json '{"name":"…"}'` | 서비스 | 생성 준비 단계에서. create·select는 앱의 현재 프로젝트를 바꾼다 |
+| 원본 내보내기 | `song:export --json '{"dir":"…","format":"mp3"}' --output /abs/out.mp3`, `album:export --json '{…}' --output /abs/dir` | 서비스 | 곡 폴더의 원본 오디오를 복사·변환(마스터 아님). 기존 파일은 `--overwrite` 요청 시에만 |
+| 가져오기 | `songs:import --input /abs/file`(현재 프로젝트로 복사), `score:open --input /abs/file.mid` → `score:convert` | 서비스 | 사용자 요청 시 |
 | 생성 | `roadmusic song:generate --file song.json` → `jobId` | 서비스·모델 | **불가** |
 | 완료 확인 | `roadmusic job:wait --json '{"jobId":"…","timeoutMs":3600000}'` | 서비스 | 생성 후 |
 
@@ -96,7 +98,7 @@ Windows PowerShell 예: `$env:ROAD_MUSIC_HOME="C:\path\to\music-road"; node "$en
 | `style-tempo` | 템포 | `bpm` 필드 또는 `NN BPM` | 공식 |
 | `style-positive-description` | 부정·제외 문구 없음 | `no drums` → `sparse piano and cello arrangement` | 필드 부재는 공식, 긍정형 권장은 Road Music |
 | `style-no-instruction` | 명령문 없음 | "make a song…" 삭제, 음악 묘사만 | 공식(모드별 원생 지시문) |
-| `lyrics-sections` | `[Verse]`/`[Chorus]`/`[Pre-Chorus]`/`[Bridge]` 중 하나 이상 | 구간으로 나눔 | 공식 |
+| `lyrics-sections` | `[Verse]`/`[Chorus]`/`[Pre-Chorus]`/`[Bridge]` 중 하나 이상 | 구간으로 나눔 | 구간 태그 사용은 공식(`[Verse]`·`[Chorus]` 예시), `[Pre-Chorus]`·`[Bridge]` 인정은 Road Music |
 | `lyrics-no-annotations` | 괄호·`/발음/` 주석 없음 | 주석은 검수 메모로 옮김 | 공식(main) |
 | `abc-tempo-consistency` | ABC `Q:`와 style BPM ±2 | 같은 값 | 공식 |
 | `melody-abc-chord-free` | melody 모드 ABC에 코드 없음 | `score:strip-chords` 사본 | 공식 |

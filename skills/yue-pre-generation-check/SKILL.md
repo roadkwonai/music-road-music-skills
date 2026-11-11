@@ -41,7 +41,7 @@ roadmusic() { node "${ROAD_MUSIC_HOME:-/Users/freelife/youtube/music/music-road}
 7. **기본값 확인:** `effective.advanced`가 기본값(full/melody CFG 1, off CFG 1.01, ODE 32 등)인지, `parts.strict`+`strong`으로 CFG 1.5가 되지 않았는지, `effective.runtime`(yue-mlx 8bit·16GiB 기본, 공식 BF16과 다름)을 확인해 보고에 적는다.
 8. **생성 준비 단계의 서비스 명령**(검토안을 보여주기 직전이나 승인 후, 초안만 모드 제외):
    - 상태: `roadmusic app:state`, `roadmusic engines:list`, `roadmusic projects:list`, `roadmusic queue:list --no-start`. 다른 프로필·임시 데이터 폴더의 결과로 설치 상태를 대신하지 않는다. 서비스가 떠 있는지만 볼 때는 `service:status`(일반 `cli:status`는 서비스를 시작한다).
-   - 프로젝트: `app:state.songsDir`·`projects:list.current`가 이 곡과 관계없는 다른 작업이면 새 프로젝트를 `projects:create`→`projects:select`로 만들고 선택한다(새 곡이 남의 프로젝트에 섞이지 않게). 같은 곡의 수정·재제작은 원래 프로젝트를 쓴다.
+   - 프로젝트: `app:state.songsDir`·`projects:list.current`가 이 곡과 관계없는 다른 작업이면 새 프로젝트를 `projects:create`로 만든다(만들면 바로 선택된다. 새 곡이 남의 프로젝트에 섞이지 않게). 같은 곡의 수정·재제작은 원래 프로젝트를 쓴다.
    - 가사: `roadmusic lyrics:clean --json '{"text":"<가사>"}'`로 정리 전후 비교, `roadmusic lyrics:check --json '{"text":"<가사>","targetSeconds":N}'`로 분량 참고. 결과의 `estimate`(초)는 부르는 줄 기준의 거친 참고값이다(실측 예: 추정 164초 → 실제 268초. 실제 길이는 모델이 계획한 악보를 따른다). 목표보다 많이 짧으면 AI 가사는 구간을 더하거나 `[Interlude]` 같은 연주 구간을 넣어 조정할 수 있고, 사용자 가사는 줄이거나 늘리지 않고 차이만 보고한다.
    - style: `roadmusic prompt:compose`에 생성과 같은 값(`genre`=`parts.genre` 또는 `style`, `instruments`/`instrumentation`, `vocal`, `dynamics`, `mix`, `bpm`, 정리 가사, `instrumental`)을 넣어 최종 style·notes를 확인한다.
 9. **보고:** 모드에 따라
@@ -51,9 +51,8 @@ roadmusic() { node "${ROAD_MUSIC_HOME:-/Users/freelife/youtube/music/music-road}
 10. **생성:** 아래 블록을 순서대로 실행한다(실행할 수 없는 환경이면 이 블록 전체를 "승인 후/사용자 PC에서 실행할 명령"으로 그대로 적는다. 일부만 적지 않는다).
 
     ```bash
-    roadmusic projects:list                                   # current가 이 곡과 무관하면 다음 두 줄
-    roadmusic projects:create --json '{"name":"<곡 이름 YYYY-MM-DD>"}'
-    roadmusic projects:select --json '{"name":"<곡 이름 YYYY-MM-DD>"}'
+    roadmusic projects:list                                   # current가 이 곡과 무관하면 다음 줄
+    roadmusic projects:create --json '{"name":"<곡 이름 YYYY-MM-DD>"}'   # 만든 프로젝트가 바로 선택된다
     roadmusic song:generate --file song.json                  # song.json에 requestPrompt 포함
     roadmusic job:wait --json '{"jobId":"<받은 jobId>","timeoutMs":3600000}'
     ```
