@@ -51,9 +51,18 @@ description: Road Music YuE2로 생성한 완성 음원(48kHz stereo FLAC)을 �
 
    측정값을 셸 변수로 넣을 때는 `${OFFSET}:linear=true`처럼 중괄호를 쓴다(zsh는 `$OFFSET:l…`을 변수 수식어로 해석해 값이 깨진다). 2026-11-12에 ffmpeg로 -32.6 LUFS 시험 신호를 -14.0 LUFS로 맞춰 이 명령을 확인했다.
 
+   **2패스 결과의 `Normalization Type`을 반드시 본다.** 선형 이득만으로 트루피크 목표를 못 맞추면(예: 원본 TP가 0 dBFS 이상) loudnorm은 조용히 `Dynamic` 모드로 바뀌어 다이내믹을 압축한다(2026-11-12 실측: LRA 9.9→8.0). 이때는 다이내믹을 보존하는 다음 방식을 쓰고 결과를 비교한다.
+
+   ```bash
+   # 선형 이득(목표 LUFS - 측정 LUFS) + 4배 오버샘플링 피크 리미터
+   ffmpeg -n -i "$IN" -af "volume=<이득>dB,aresample=192000,alimiter=limit=0.85:attack=1:release=60:level=false,aresample=48000" -ar 48000 -c:a pcm_s24le "$OUT_DIR/<제목> - master -14LUFS.wav"
+   ```
+
+   실측 예: -12.9 LUFS·TP +0.2 원본에 `volume=-1.05dB` + 리미터 → -14.0 LUFS, TP -1.4 dBTP, LRA 원본과 같음. 두 결과의 LRA를 비교해 원본에 가까운 쪽을 고르고 선택 이유를 보고한다.
+
    EQ·압축 같은 음색 처리는 사용자가 원하고 청취로 확인할 수 있을 때만, 한 번에 하나씩 한다.
 5. **재측정:** 결과 파일로 2단계를 다시 실행하고 목표 대비 차이를 기록한다.
-6. **내보내기:** Road Music `song:export`(`{"dir":"…","format":"mp3"|"wav"}`)나 앨범 `album:export`가 있으면 그것을 쓰고, 마스터 WAV를 따로 만든 경우 MP3는 그 WAV에서 변환한다(`-c:a libmp3lame -b:a 320k`, 새 파일).
+6. **내보내기:** MP3로 바꾸면 피크가 조금 오를 수 있으므로 MP3도 다시 잰다. Road Music `song:export`(`{"dir":"…","format":"mp3"|"wav"}`)나 앨범 `album:export`가 있으면 그것을 쓰고, 마스터 WAV를 따로 만든 경우 MP3는 그 WAV에서 변환한다(`-c:a libmp3lame -b:a 320k`, 새 파일).
 7. **앨범 일관성(여러 곡):** 곡별 통합 라우드니스 차이가 크면(예: 2 LU 이상) 맞추되, 의도된 조용한 곡은 사용자 확인 후 유지한다.
 
 ## 보고
@@ -63,5 +72,5 @@ description: Road Music YuE2로 생성한 완성 음원(48kHz stereo FLAC)을 �
 | 곡 | 원본 경로 | 결과 경로 | 원본 LUFS/TP | 결과 LUFS/TP | 형식 | QC 문제 |
 - 원본 보존: 예(덮어쓰기 없음)
 - 청취: 미실행 / 실행(범위)
-- 메모: 업샘플링 여부, 장르 목표 선택 이유
+- 메모: 업샘플링 여부, 장르 목표 선택 이유, loudnorm 모드(Linear/Dynamic) 또는 이득+리미터 선택 이유, 모노 합산 차이(원본과 비교)
 ```

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "name": "music-road-music-skills",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "repository": "roadkwonai/music-road-music-skills",
-  "releaseNotes": "release/2026-11-12-live-generation-audit-0-1-1.md",
+  "releaseNotes": "release/2026-11-12-mastering-dynamic-fallback-0-1-2.md",
   "roadMusic": {
     "cliVersion": "0.1.0",
     "protocolVersion": 2
