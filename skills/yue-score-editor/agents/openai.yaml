@@ -1,0 +1,4 @@
+interface:
+  display_name: "YuE2 악보 편집"
+  short_description: "ABC 악보 편집·재화성·악보 기반 커버·악보 내보내기"
+  default_prompt: "$yue-score-editor 이 곡의 후렴 화성을 재즈풍으로 바꾸고 선율은 그대로 두는 수정안을 만들어줘."

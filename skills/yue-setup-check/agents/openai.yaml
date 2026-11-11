@@ -1,0 +1,4 @@
+interface:
+  display_name: "YuE2 환경 점검"
+  short_description: "Road Music CLI·엔진·지원 범위·스킬 버전 읽기 전용 점검"
+  default_prompt: "$yue-setup-check YuE2 작업 환경을 점검해줘."

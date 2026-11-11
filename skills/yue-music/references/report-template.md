@@ -6,7 +6,7 @@ Road Music `docs/yue-prompt-guide.md#official-report`의 형식을 그대로 따
 
 ```text
 ## YuE2 공식 가이드 보정 보고
-- 참고 원문: 공식 yue2-v0.1.6 generation·generation-and-covers, main(1116bea, 2026-11-01) generation, 엔진 yue-mlx
+- 참고 원문: 공식 yue2-v0.1.6 generation·generation-and-covers, main(1116bea, 2026-11-01) generation, (yue-mlx면) MLX usage, 엔진 yue-mlx
 - 공식 점검(song:prepare officialGuide): pass N · advice N · 해당 없음 N
 
 | 항목 | 원래 입력 | 보정 후 | 공식 근거 | 적용 |
@@ -48,8 +48,9 @@ Road Music `docs/yue-prompt-guide.md#official-report`의 형식을 그대로 따
 
 | 자료 | 내용 |
 | --- | --- |
-| 음악 | 실제 오디오 절대 경로(`job:wait`·`songs:list` 응답 그대로) |
-| 가사·프롬프트·설정 | 실제 전달 가사, 최종 style, 요청 JSON, seed, 엔진, 실효 옵션 |
+| 음악 | 실제 오디오 절대 경로(`job:wait`·`songs:list` 응답 그대로). 채팅이 지원하면 오디오 첨부 |
+| 가사·프롬프트·설정 | 실제 전달 가사, 최종 style, 요청 JSON, seed, 엔진, 실효 advanced·runtime(정밀도 포함), 모델/VAE·런타임 리비전(결과에 있을 때) |
+| 참고 자료·선택 이유 | 실제로 읽은 문서 절, 장르 레시피, 조사 URL·확인일, 보컬·악기·구조를 고른 이유 |
 | 파일 검사 | 실제 길이·포맷, `result.json`의 `truncated.abc`·`truncated.semantic` |
 | 가사 반영 | 자동 전사(사용한 모델·무유도 여부) / 직접 청취 / 확인 불가를 구분 |
 | 한국어 검수·보정 보고 | 위 두 절 |

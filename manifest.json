@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "name": "music-road-music-skills",
+  "version": "0.1.0",
+  "repository": "roadkwonai/music-road-music-skills",
+  "releaseNotes": "release/2026-11-12-yue2-music-skills-0-1-0.md",
+  "roadMusic": {
+    "cliVersion": "0.1.0",
+    "protocolVersion": 2
+  },
+  "upstream": {
+    "repository": "bitwize-music-studio/claude-ai-music-skills",
+    "commit": "597d928fb2c8316ee13159771405813174aa01de",
+    "license": "CC0-1.0"
+  },
+  "skills": [
+    {
+      "id": "yue-music",
+      "path": "skills/yue-music",
+      "displayName": "YuE2 음악 제작",
+      "guide": "docs/skills.md"
+    },
+    {
+      "id": "yue-style-engineer",
+      "path": "skills/yue-style-engineer",
+      "displayName": "YuE2 스타일 엔지니어",
+      "guide": "docs/skills.md"
+    },
+    {
+      "id": "yue-lyric-writer",
+      "path": "skills/yue-lyric-writer",
+      "displayName": "YuE2 작사가",
+      "guide": "docs/skills.md"
+    },
+    {
+      "id": "yue-lyric-reviewer",
+      "path": "skills/yue-lyric-reviewer",
+      "displayName": "YuE2 가사 검수",
+      "guide": "docs/skills.md"
+    },
+    {
+      "id": "yue-pre-generation-check",
+      "path": "skills/yue-pre-generation-check",
+      "displayName": "YuE2 생성 전 관문",
+      "guide": "docs/skills.md"
+    },
+    {
+      "id": "yue-album-planner",
+      "path": "skills/yue-album-planner",
+      "displayName": "YuE2 앨범 기획",
+      "guide": "docs/skills.md"
+    },
+    {
+      "id": "yue-result-review",
+      "path": "skills/yue-result-review",
+      "displayName": "YuE2 결과 검수",
+      "guide": "docs/skills.md"
+    },
+    {
+      "id": "yue-score-editor",
+      "path": "skills/yue-score-editor",
+      "displayName": "YuE2 악보 편집",
+      "guide": "docs/skills.md"
+    },
+    {
+      "id": "yue-research",
+      "path": "skills/yue-research",
+      "displayName": "YuE2 곡 자료 조사",
+      "guide": "docs/skills.md"
+    },
+    {
+      "id": "yue-mastering",
+      "path": "skills/yue-mastering",
+      "displayName": "YuE2 마스터링",
+      "guide": "docs/skills.md"
+    },
+    {
+      "id": "yue-release",
+      "path": "skills/yue-release",
+      "displayName": "YuE2 공개 준비",
+      "guide": "docs/skills.md"
+    },
+    {
+      "id": "yue-project-status",
+      "path": "skills/yue-project-status",
+      "displayName": "YuE2 작업 현황",
+      "guide": "docs/skills.md"
+    },
+    {
+      "id": "yue-setup-check",
+      "path": "skills/yue-setup-check",
+      "displayName": "YuE2 환경 점검",
+      "guide": "docs/skills.md"
+    }
+  ]
+}

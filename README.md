@@ -1,130 +1,152 @@
-# music-road-music-skills — YuE2용 Road Music 음악 스킬 묶음
+# Music Road YuE2 Skills
 
-Suno용 Claude 음악 스킬 [bitwize-music-studio/claude-ai-music-skills](https://github.com/bitwize-music-studio/claude-ai-music-skills)(커밋 `597d928`, 2026-10-13)를 분석해 **YuE2 공식 가이드와 Road Music CLI**에 맞게 다시 만든 스킬 묶음이다. Road Music(`/Users/freelife/youtube/music/music-road`)과 함께 쓰며, 그 저장소는 수정하지 않는다.
+**Road Music으로 YuE2 음악을 만드는 Claude Code·Codex용 스킬 묶음입니다.** 대화로 원하는 곡을 말하면 기획, 작사, style 프롬프트, 생성 전 공식 가이드 점검, 생성, 결과 검수, 악보 편집, 마스터링, 공개 준비까지 이어서 처리합니다. 모든 단계는 YuE2 공식 가이드와 Road Music 규칙을 따릅니다.
 
-- 대상 엔진: `yue-mlx`(Apple Silicon, 커뮤니티 MLX 포트) / `yue`(Windows NVIDIA, 공식 YuE2 워커). 사용자가 고른 엔진을 유지한다.
-- 근거: Road Music `docs/yue-prompt-guide.md`(공식 보정·보고 형식), `docs/music-review.md`(원문 보존·한국어 검수·승인), `docs/lyrics-tags.md`, `docs/yue-cli-workflow.md`, 고정 공식 원문 `docs/vendor/yue2/`(yue2-v0.1.6, main 2026-11-01, MLX usage).
-- 기준 CLI: Road Music CLI 0.1.0(protocol 2). 실행 버전의 `schema`가 최종 기준이다.
+Suno용으로 만들어진 [claude-ai-music-skills](https://github.com/bitwize-music-studio/claude-ai-music-skills)(스킬 53개, CC0)를 분석해 YuE2 모델에 맞게 다시 썼습니다. Suno의 슬라이더·Exclude Styles·Persona·구간 교체처럼 YuE2에 없는 기능은 비슷한 옵션으로 흉내 내지 않고 "대응 없음"으로 밝힙니다.
 
-## 스킬 목록
+[![Release](https://img.shields.io/github/v/release/roadkwonai/music-road-music-skills?label=release)](https://github.com/roadkwonai/music-road-music-skills/releases/latest)
 
-| 스킬 | 하는 일 | 원본 대응 |
-| --- | --- | --- |
-| [`yue-music`](skills/yue-music/SKILL.md) | 진입점. 요청 모드 판정, 엔진 유지, 단계별 스킬 연결. [공통 규칙](skills/yue-music/references/common-rules.md)·[CLI 연결](skills/yue-music/references/road-music-cli.md)·[보고 형식](skills/yue-music/references/report-template.md)·[Suno→YuE2 대응표](skills/yue-music/references/suno-to-yue2.md) | session-start, help, next-step |
-| [`yue-style-engineer`](skills/yue-style-engineer/SKILL.md) | style(언어, 장르, 보컬, 악기, 선율·프레이징, BPM)·parts·cot·seed·abc 작성과 officialGuide 보정 | suno-engineer |
-| [`yue-lyric-writer`](skills/yue-lyric-writer/SKILL.md) | YuE2 가사 계약(부를 말 + 구간 태그만)에 맞춘 작사·허용 범위 개사·다듬기 | lyric-writer, lyric-refiner |
-| [`yue-lyric-reviewer`](skills/yue-lyric-reviewer/SKILL.md) | 제목·가사 한국어 검수, 계약·발음 위험·AI 투·노골적 표현 점검, 원문은 제안만 | lyric-reviewer, pronunciation-specialist, voice-checker, explicit-checker |
-| [`yue-pre-generation-check`](skills/yue-pre-generation-check/SKILL.md) | 생성 전 관문 G0~G10, `song:prepare` 2회 보정, 보정 보고, 승인 후에만 `song:generate`→`job:wait` | pre-generation-check |
-| [`yue-album-planner`](skills/yue-album-planner/SKILL.md) | 여러 곡 순서·에너지·곡별 요청 설계 | album-conceptualizer |
-| [`yue-result-review`](skills/yue-result-review/SKILL.md) | truncation·길이·무유도 전사·청취 구분, 악보 선택, 재제작 효율 판단 | Regeneration Workflow, error-recovery |
+| 항목 | 내용 |
+| --- | --- |
+| 대상 엔진 | `yue-mlx`(Apple Silicon, 커뮤니티 MLX 포트) · `yue`(Windows NVIDIA, 공식 YuE2 워커) |
+| 기준 | YuE2 공식 `yue2-v0.1.6` 고정판, 공식 main(2026-11-01), Road Music CLI 0.1.0(protocol 2) |
+| 에이전트 | Claude Code, Codex(codex-cli 0.167.0에서 확인) |
+| 스킬 | 13개 ([레퍼런스](docs/skills.md)) |
+| 라이선스 | MIT ([LICENSE](LICENSE)) |
 
-모든 스킬이 공유하는 규칙: 사용자 원문 가사·프롬프트 보존(보정안만 제안, 승인 후 반영), 한국어 제목·가사 검수, 생성 전 검토·승인(전체 자동 위임일 때만 요청자 검토 생략), 매번 `## YuE2 공식 가이드 보정 보고` 절과 보정 전후 표(보정 없음도 명시), 길이·가창·발음·무보컬을 보장한다고 쓰지 않음.
+---
+
+## 이런 식으로 씁니다
+
+```text
+나:   맥에서 YuE MLX로 한국어 여성 보컬 락발라드 1곡 만들고 싶어. 이별 후 혼자 남은 방을 정리하는 내용, 150초, 피아노랑 일렉기타 중심. 가사는 네가 써줘.
+AI:   기본 검토 모드로 진행합니다. 생성 전에 확인받습니다.
+      - 가사(Verse·Pre-Chorus·Chorus·Bridge)와 한국어 검수 판정
+      - style: Korean, emotional rock ballad, solo female vocal, piano, electric guitar, … 76 BPM
+      - 요청 JSON과 song:prepare 결과(valid, 공식 점검 pass 8 · advice 0)
+      - ## YuE2 공식 가이드 보정 보고(보정 전후 표)
+      이 가사·프롬프트·옵션으로 생성할까요?
+
+나:   그대로 생성해줘.
+AI:   song:generate → job:wait. 결과 파일, truncation, 실제 길이, 가사 반영(전사/청취 구분)을 보고합니다.
+
+나:   유튜브용으로 -14 LUFS 마스터링하고 올리기 전에 점검해줘.
+AI:   원본은 보존하고 새 WAV를 만든 뒤 측정 전후 표를 보여줍니다. 이어서 권리·AI 고지·메타데이터 점검표를 줍니다.
+```
+
+Suno에서 쓰던 프롬프트도 그대로 붙여 넣으면 원문은 보존하고, YuE2용 보정안과 실행 JSON(원문판·보정판)을 따로 줍니다.
+
+## 지키는 원칙
+
+- **사용자 원문 보존:** 준 가사·프롬프트·옵션은 임의로 고치지 않습니다. 고칠 점은 `원문 → 보정안 → 근거 → 적용 여부`로 제안하고, 승인받은 것만 반영합니다.
+- **생성 전 승인:** 기본은 다 보여주고 묻습니다. "가사와 프롬프트까지 전부 자동으로 정하고 생성해줘"처럼 전체를 맡긴 경우에만 묻지 않고 진행합니다.
+- **매번 공식 가이드 보정 보고:** 프롬프트를 쓰거나 생성을 준비할 때마다 `song:prepare`의 공식 점검으로 보정하고 `## YuE2 공식 가이드 보정 보고`와 보정 전후 표를 붙입니다. 보정이 없어도 "보정 없음"이라고 씁니다.
+- **한국어 검수:** 한국어 제목·가사는 생성 전에 자연스러움을 검수합니다. 한국어가 없는 항목은 해당 없음입니다.
+- **보장하지 않는 것은 보장한다고 쓰지 않음:** 정확한 길이·템포, 특정 가수 음색, 발음, 무보컬, 악기 완전 배제는 청취로만 확인합니다.
+- **엔진 유지·설치 안 함:** 고른 엔진을 바꾸거나 모델을 몰래 내려받지 않습니다.
+
+자세한 규칙은 [공통 규칙](skills/yue-music/references/common-rules.md)에 있습니다.
+
+## 스킬 13개
+
+| 단계 | 스킬 | 하는 일 | 원본 대응 |
+| --- | --- | --- | --- |
+| 진입 | [`yue-music`](skills/yue-music/SKILL.md) | 요청 모드 판정, 엔진 유지, 단계 연결, 필수 출력 골격 | session-start, help, next-step |
+| 기획 | [`yue-album-planner`](skills/yue-album-planner/SKILL.md) | 여러 곡의 순서·에너지·곡별 요청 설계 | album-conceptualizer |
+| 조사 | [`yue-research`](skills/yue-research/SKILL.md) | 실화·다큐 곡의 1차 자료 조사, 사람 출처 확인 관문 | researcher 외 13개 |
+| 작사 | [`yue-lyric-writer`](skills/yue-lyric-writer/SKILL.md) | 부를 말 + 구간 태그만 쓰는 YuE2 가사 | lyric-writer, lyric-refiner |
+| 프롬프트 | [`yue-style-engineer`](skills/yue-style-engineer/SKILL.md) | style·parts·cot·seed·abc 작성과 보정 | suno-engineer |
+| 검수 | [`yue-lyric-reviewer`](skills/yue-lyric-reviewer/SKILL.md) | 한국어·계약·발음 위험·AI 투·차용 점검 | lyric-reviewer, pronunciation-specialist, voice-checker, explicit-checker |
+| 관문 | [`yue-pre-generation-check`](skills/yue-pre-generation-check/SKILL.md) | G0~G10, `song:prepare` 2회, 승인 후 생성 | pre-generation-check |
+| 결과 | [`yue-result-review`](skills/yue-result-review/SKILL.md) | truncation·길이·전사·청취 구분, 재제작 판단 | Regeneration Workflow |
+| 악보 | [`yue-score-editor`](skills/yue-score-editor/SKILL.md) | ABC 편집·재화성·악보 기반 커버·악보 내보내기 | sheet-music-publisher, Song Editor·Cover |
+| 후처리 | [`yue-mastering`](skills/yue-mastering/SKILL.md) | 원본 보존 마스터링·QC·내보내기 | mastering-engineer, mix-engineer |
+| 공개 | [`yue-release`](skills/yue-release/SKILL.md) | 권리·라이선스·AI 고지·메타데이터·아트·홍보 문구 | release-director, promo-*, album-art-director, plagiarism-checker |
+| 관리 | [`yue-project-status`](skills/yue-project-status/SKILL.md) | 이어 하기·다음 단계·진행 현황·이름 변경 | resume, next-step, album-dashboard 외 |
+| 점검 | [`yue-setup-check`](skills/yue-setup-check/SKILL.md) | CLI·엔진·지원 범위 읽기 전용 점검, 처음 사용 안내 | session-start, setup, health-check, tutorial 외 |
+
+원본 53개 스킬과 참고 문서·도구를 하나씩 어떻게 처리했는지는 [원본 전수 대응표](docs/upstream-coverage.md)에 있습니다.
 
 ## 설치
 
-스킬 폴더를 Claude Code(또는 Codex) 스킬 경로에 심볼릭 링크로 연결한다. 기존 같은 이름이 있으면 덮어쓰지 않는다(`ln -s`는 실패한다).
+Road Music 소스 키트(CLI)가 먼저 있어야 합니다. 엔진이 없어도 작사·프롬프트·검수·준비 점검까지는 됩니다.
 
 ```bash
-for d in /Users/freelife/youtube/music/music-road-music-skills/skills/*/; do ln -s "${d%/}" ~/.claude/skills/; done
+git clone https://github.com/roadkwonai/music-road-music-skills.git ~/music-road-music-skills
 ```
 
-Codex를 쓴다면 대상 경로만 바꾼다(예: `~/.codex/skills/` 또는 프로젝트의 `.agents/skills/`). 스킬 사이의 상대 링크(`../yue-music/references/…`)는 링크의 실제 위치 기준으로 풀리므로 폴더 구조를 유지한 채 링크한다.
+Claude Code:
 
-Road Music 위치가 다르면(예: Windows) 환경 변수로 알려 준다.
+```bash
+for d in ~/music-road-music-skills/skills/*/; do ln -s "${d%/}" ~/.claude/skills/; done
+```
+
+Codex:
+
+```bash
+for d in ~/music-road-music-skills/skills/*/; do ln -s "${d%/}" "${CODEX_HOME:-$HOME/.codex}/skills/"; done
+```
+
+Road Music이 기본 위치(`/Users/freelife/youtube/music/music-road`)가 아니면:
 
 ```bash
 export ROAD_MUSIC_HOME=/path/to/music-road
 ```
 
-필요한 것: Node.js(Road Music CLI 실행용)와 `npm ci --include=dev`를 마친 Road Music 소스 키트. 엔진·모델 설치는 이 묶음의 범위가 아니다(Road Music `docs/cli-install.md`).
+Release ZIP 설치, Windows, 업데이트·제거는 [시작하기](docs/getting-started.md)를 보세요.
 
-## 사용
+## 문서
 
-Claude Code에서 평소처럼 요청하면 `yue-music`이 진입점이 된다.
-
-```text
-YuE MLX로 한국어 여성 발라드 1곡 준비해줘. 생성 전에 보여줘.
-```
-
-```text
-이 Suno 프롬프트와 가사를 YuE2용으로 바꿔줘. 원문은 그대로 두고 보정안만 보여줘.
-```
-
-```text
-가사와 프롬프트까지 전부 자동으로 정해서 yue-mlx로 트로트 1곡 생성해줘.
-```
-
-흐름: 가사(`yue-lyric-writer`) → style(`yue-style-engineer`) → 검수(`yue-lyric-reviewer`) → 관문·`song:prepare`·보정 보고(`yue-pre-generation-check`) → 승인 → `song:generate` → `job:wait` → 결과 검수(`yue-result-review`).
-
-### 검증 스크립트
-
-`examples/*.json`을 실제 `song:prepare`(모델·서비스 없이 로컬, 음악 생성 없음)에 넣어 `valid:true`, 엔진 유지, `officialGuide` advice가 [기대값](examples/expectations.json)과 같은지 확인한다. 데이터 폴더는 `ROADMUSIC_DATA_DIR`로 분리한다(지정하지 않으면 OS 임시 폴더에 새로 만든다).
-
-```bash
-ROADMUSIC_DATA_DIR="$(mktemp -d)" node scripts/verify-examples.mjs --write verification/RESULTS.md
-```
-
-최근 실행 결과: [verification/RESULTS.md](verification/RESULTS.md) — 7/7 통과. 변환 결과 예시 6개는 advice 0, Suno식 입력을 그대로 둔 비교용 예시(`suno-style-before.json`)는 의도대로 advice 5개(`style-language`, `style-tempo`, `style-positive-description`, `style-no-instruction`, `lyrics-no-annotations`)가 나오고, 대응표로 바꾼 `suno-style-after.json`은 0이다.
-
-| 예시 | 보여주는 것 |
+| 문서 | 내용 |
 | --- | --- |
-| `ko-ballad-yue-mlx.json` | 공식 순서 style + `bpm` 필드 |
-| `ko-trot-parts-yue-mlx.json` | style 없이 `parts`(genre·vocal·instrumentation·dynamics·bpm) |
-| `en-pop-yue-windows.json` | Windows용 `engine:"yue"`, `cot:"melody"` |
-| `instrumental-yue-mlx.json` | `instrumental:true` |
-| `ko-melody-abc-yue-mlx.json` | 코드 없는 ABC + `cot:"melody"`, ABC `Q:`와 style BPM 일치 |
-| `suno-style-before.json` / `suno-style-after.json` | Suno식 입력과 변환 결과 |
+| [시작하기](docs/getting-started.md) | 준비물, 설치(Claude·Codex·Release ZIP), 설치 확인, 첫 곡, 업데이트·제거 |
+| [작업 흐름](docs/workflow.md) | 전체 흐름도, 요청 모드, 매번 받는 보고, 예시 대화 4가지 |
+| [스킬 레퍼런스](docs/skills.md) | 13개 스킬의 용도·핵심 규칙·CLI·원본 대응 |
+| [원본 전수 대응표](docs/upstream-coverage.md) | 원본 53개 스킬·참고 문서·도구의 전환·통합·대체·제외 판정 |
+| [Suno→YuE2 대응표](skills/yue-music/references/suno-to-yue2.md) | Style 칸, 메타태그, 슬라이더, Cover 등 Suno 개념별 변환 |
+| [공통 규칙](skills/yue-music/references/common-rules.md) | 엔진, 입력 계약(공식 사실과 Road Music 규칙 구분), 원문 보존, 승인, 로컬/서비스 명령 |
+| [Road Music CLI 연결](skills/yue-music/references/road-music-cli.md) | 명령 순서, 요청 JSON 필드, `song:prepare` 결과와 `officialGuide` 점검 ID |
+| [Codex에서 쓰기](docs/codex.md) | 설치·호출·Codex에서 주의할 점 |
+| [테스트와 검증](docs/testing.md) | 정적 검사, 예시 검증, Claude·Codex 시나리오 테스트 결과 |
+| [문제 해결](docs/troubleshooting.md) | zsh 함정, `ok:false`/`valid:false`, 남은 서비스, 미설치 표시 등 |
+| [릴리스 노트](release/README.md) | 버전별 변경과 릴리스 절차 |
 
-## 원본 대비 변경점
+## 원본 대비 주요 변경
 
-### Suno 전용이라 바꾼 것
-
-자세한 표는 [Suno→YuE2 대응표](skills/yue-music/references/suno-to-yue2.md).
-
-- Style 칸 1,000자·"보컬 먼저" 문장 블록 → YuE2 `style`의 공식 순서(언어, 장르, 보컬, 악기, 선율·프레이징, BPM) 쉼표 태그, 태그당 10단어 이하(Road Music 조합기 규칙).
-- Lyrics 칸 5,000자 → `lyrics`(부를 말 + 구간 태그만). 문자 수로 자르지 않음.
-- Performance Cue(`[Verse - cold regal]`)·무드 태그(`[Whispered]`)·괄호 백보컬·무대 지시 → 쓰지 않음. 전체 성향만 style/`parts`로.
-- 발음용 철자 바꾸기(phonetic respelling)·발음표 강제 적용 → 폐기. 가사 주석은 YuE2에서 그대로 불릴 수 있고 발음 제어 채널이 없다. 발음 위험은 검수 메모와 제안으로만.
-- Exclude Styles·`no X` 부정 프롬프트 → 긍정형 편성 묘사(`negative_prompt` 없음).
-- `[Instrumental]` 지시·Instrumental 토글 → `instrumental:true` + 청취 확인(무보컬 보장 없음).
-- Suno 모델(v6/wild/mini/Custom)·Variety·Weirdness·Style Influence·Audio Influence·Max Mode → 대응 없음. `engine`(`yue-mlx`/`yue`)과 YuE2 고유 `cot`·`seed`·`abc`로 대체. 샘플링 옵션과 짝짓지 않음.
-- Duration(값에서 자름) → `targetSeconds`는 기록용, 자연 EOS.
-- Persona·Voices·참조 가수 → 대응 없음. 실존 가수명 금지 원칙은 유지.
-- 오디오 업로드 Cover → 공식 악보 기반 커버(SheetSage2 → 코드 없는 멜로디 ABC → `cot:"melody"`)로 안내, Road Music `coverAudio`는 ACE 전용.
-- Extend·Replace Section·Song Editor·Stems → 대응 없음(로컬 인페인팅·스템 없음). 수정은 새 전체 생성 또는 `song:render`(원문 유지 악보 수정).
-- 클립보드로 Suno 웹에 붙여넣기 → `song:prepare` → 승인 → `song:generate --file` → `job:wait`.
-- "Suno는 비결정적이니 다시 생성" → Road Music 재제작 효율 기준(`music-review.md#retry-value`).
-- 영어 운율·강세 수치, Suno 밀도 한도(BPM 100 미만 8줄 금지 등), 단어 수 하드 실패 → 한국어 호흡·음절 밀도 점검으로 바꾸고 수치 규칙은 쓰지 않음.
-
-### 뺀 것 (이 묶음 범위 밖)
-
-| 원본 스킬 | 이유 |
+| Suno 원본 | 이 묶음 |
 | --- | --- |
-| mix-engineer, mastering-engineer | Suno 스템·마스터링 파이프라인 전제. YuE2는 스템을 내지 않음 |
-| promo-director, promo-writer, promo-reviewer, cloud-uploader, release-director, sheet-music-publisher, album-art-director, import-art | 홍보·배포·아트. 영상은 Road Music 영상 스킬 사용 |
-| researcher, researchers-*(10종), document-hunter, verify-sources | 다큐멘터리 리서치 체계. 필요하면 원본(CC0)을 별도로 사용 |
-| new-album, import-track, import-audio, rename, validate-album, album-dashboard, album-ideas, promote-idea, resume, session-start, setup, configure, health-check, test, tutorial, clipboard, about, help, next-step | 원본 MCP 서버·`~/.bitwize-music` 폴더 구조 전제. Road Music은 `projects:*`·`songs:*`·제작 기록 스킬로 관리 |
-| plagiarism-checker | 모델과 무관한 웹 검색 점검. 이 묶음에서는 검수 항목 14(차용 의심 알림)로만 남김 |
-| genre-creator, genres/(72개 장르 문서) | Suno 팁이 섞인 장르 문서. Road Music `docs/genre-prompts.md`·`prompt:knowledge genres`를 사용 |
-| MCP 서버(80+ 도구), hooks, tools/, templates/ | Road Music CLI로 대체 |
+| Style 칸(1,000자), "보컬 먼저" 문장 블록 | 장르·악기·보컬·언어·템포를 짧은 쉼표 태그로(태그당 10단어 이하) |
+| Performance Cue `[Verse - cold regal]`, 무드 태그, 괄호 백보컬 | 쓰지 않음. 부를 말 + 구간 태그만, 의도는 곡 전체 style로 |
+| 발음용 철자 바꾸기 | 폐기. 가사 주석·철자는 그대로 불릴 수 있고 발음 제어 채널이 없음 |
+| Exclude Styles, `no drums` | `negative_prompt` 없음. 긍정형 편성 묘사 권장, 배제 보장 없음 |
+| v6 모델·Variety·Weirdness·Style Influence·Max Mode | 대응 없음. 엔진 선택과 YuE2 고유 `cot`·`seed`·`abc` |
+| Duration(값에서 자름) | `targetSeconds`는 기록용, 실제 길이는 가사 분량과 자연 종료 |
+| Persona·Voices·오디오 업로드 Cover | 참조 가수·음원 필드 없음. 악보 기반 커버(SheetSage2 → `cot:"melody"`) |
+| Extend·Replace Section·Stems | 대응 없음. 악보 사본 편집 후 전체 재생성 |
+| Python MCP 서버(80+ 도구)·상태 캐시 | Road Music CLI와 앱 상태 |
+| 스템별 믹싱 | YuE2는 스템을 내지 않으므로 전체 믹스 마스터링만 |
+| "다시 생성해 보기" | 확인된 기술 원인이 있을 때만 재제작(Road Music 효율 기준) |
 
-### 유지한 것
+## 검증
 
-작사 기법(장면으로 보여주기, 절/후렴 대비, 절-후렴 반복 회피, 2절 전진, 훅·제목 배치, 시점·시제 일관성), 다듬기 패스, AI 투 표현 점검(voice-checker의 가사 패턴), 노골적 표현 확인, 앨범 순서·에너지 설계, 생성 전 관문 구조, 실존 아티스트명 차단, "동조자가 아니라 협업자" 태도.
+- **정적 검사:** `node --test tests/*.test.cjs`. manifest·frontmatter·Codex 메타데이터·링크·zsh 함정·예시 필드·릴리스 스크립트를 확인합니다. GitHub Actions 릴리스 관문에서도 실행됩니다.
+- **예시 검증:** `ROADMUSIC_DATA_DIR="$(mktemp -d)" node scripts/verify-examples.mjs --write verification/RESULTS.md`. 예시 요청 7개를 실제 `song:prepare`에 넣어 `valid:true`, 엔진 유지, 공식 점검 advice가 기대와 같은지 봅니다. 최근 결과는 [verification/RESULTS.md](verification/RESULTS.md)에 있습니다.
+- **시나리오 테스트:** Suno 변환, 새 곡 검토 모드, 자동 위임 + 사용자 가사, 마스터링의 4가지 요청을 Claude와 Codex로 돌려 채점했습니다([테스트와 검증](docs/testing.md)).
+
+이 검증은 입력 계약과 절차 확인입니다. 이 작업에서 실제 YuE2 음악 생성은 하지 않았고, 가창·음질은 생성 후 청취로만 확인할 수 있습니다.
 
 ## 남은 한계
 
-- `officialGuide`는 문자열 휴리스틱이다. 실제로 부르는 괄호 메아리도 주석으로 표시하고, 반대로 모든 계약 위반을 잡지는 않는다. 그래서 스킬은 사람 판단의 검수 항목을 따로 둔다.
-- 검증 스크립트는 입력 계약만 확인한다. 실제 가창·길이·발음·음질·무보컬은 생성 후 청취로만 확인할 수 있고, 이 작업에서는 음악을 생성하지 않았다.
-- `score:check`는 실행 환경(런타임)이 있어야 동작해 이 환경에서는 쓸 수 없었다. ABC 예시는 오프라인 `score:inspect`로 구조만 확인했다(Vocal 22음, 8마디, 80 BPM).
-- `yue` 엔진 예시는 Mac에서 `song:prepare`로만 확인했다(`platformMatches:false`). Windows NVIDIA 실제 환경 검증은 하지 않았다.
-- `parts` 조합 순서는 Road Music 조합기가 정한다. 공식 예시 순서를 정확히 지키려면 `style` 한 줄로 쓴다.
-- Road Music CLI·문서가 바뀌면 이 묶음의 요약(공통 규칙·CLI 표)이 낡을 수 있다. 실행 버전 `schema`와 Road Music 문서가 우선이며, 바뀌면 `scripts/verify-examples.mjs`를 다시 돌린다.
-- 한국어 YuE2 가창 품질은 공식 자료가 보증하지 않는다(YuE2 모델 카드 언어 메타데이터는 zh/en).
+- `officialGuide`는 문자열 휴리스틱입니다. 실제로 부르는 괄호 메아리도 주석으로 표시하고, 모든 위반을 잡지는 못합니다.
+- `score:check`는 YuE 런타임이 있어야 동작합니다. 오프라인에서는 `score:inspect`·`score:compare`를 씁니다.
+- `yue` 엔진(Windows NVIDIA)은 Mac에서 `song:prepare`로만 확인했습니다.
+- 한국어 YuE2 가창 품질은 공식 자료가 보증하지 않습니다(YuE2 모델 카드 언어 메타데이터는 zh/en).
+- Suno 쪽 사실(칸 글자 수, 모델명 등)은 원본 스킬 문서 기준이며 Suno 공식 자료로 다시 확인하지 않았습니다.
+- Road Music CLI·문서가 바뀌면 요약이 낡을 수 있습니다. 실행 버전 `cli:schema`와 Road Music 문서가 우선이며, 바뀌면 검증을 다시 돌립니다.
 
 ## 출처와 라이선스
 
-- 원본 스킬: [bitwize-music-studio/claude-ai-music-skills](https://github.com/bitwize-music-studio/claude-ai-music-skills), **CC0 1.0 Universal**(퍼블릭 도메인 헌정, 복사·수정·재배포 허용). 원문을 복사하지 않고 구조와 기법을 참고해 새로 썼다. 원본 README의 고지대로, 장르 문서의 실존 아티스트 언급은 교육·참고용이었다.
-- YuE2 공식 자료: 고정판 `yue2-v0.1.6`의 코드·문서·스킬은 **CC BY-NC 4.0**, 공식 main(2026-11-01)은 **Apache-2.0**, 커뮤니티 MLX 포트 코드는 **Apache-2.0**, 모델 가중치는 별도 모델 라이선스. 이 묶음은 공식 원문을 동봉하지 않고 Road Music 저장소의 보관본 경로를 가리키며, 규칙은 요약해 적었다. 생성물의 권리·상업 이용 조건은 Road Music `docs/yue-prompt-guide.md#rights`와 최신 공식 조건을 확인한다.
-- Road Music 문서: 같은 사용자의 저장소이며 이 묶음은 그 문서를 참조만 한다.
-- 이 묶음 자체의 라이선스는 정하지 않았다. 공개 배포 전에 사용자가 정한다.
+- **이 묶음:** MIT, Copyright (c) 2026 하이밸류연구소.
+- **원본 스킬:** [bitwize-music-studio/claude-ai-music-skills](https://github.com/bitwize-music-studio/claude-ai-music-skills)(커밋 `597d928`), CC0 1.0 Universal. 원문을 복사하지 않고 구조와 기법을 참고해 새로 썼습니다.
+- **YuE2:** 공식 고정판 `yue2-v0.1.6`의 코드·문서·스킬은 CC BY-NC 4.0, 공식 main은 Apache-2.0, 커뮤니티 MLX 포트 코드는 Apache-2.0, 모델 가중치는 별도 모델 라이선스입니다. 이 묶음은 공식 원문을 동봉하지 않고 Road Music 저장소의 보관본을 가리키며 규칙만 요약합니다. 생성물의 권리와 상업 이용 조건은 `yue-release` 스킬과 Road Music `docs/yue-prompt-guide.md#rights`, 최신 공식 조건을 확인하세요.
+- **Road Music:** [roadkwonai/music-road](https://github.com/roadkwonai/music-road). 이 묶음은 그 문서와 CLI를 참조만 합니다.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "YuE2 가사 검수"
+  short_description: "제목·가사 한국어 검수와 YuE2 가사 계약·발음 위험 점검"
+  default_prompt: "$yue-lyric-reviewer 이 가사를 YuE2 생성 전에 검수해줘. 원문은 고치지 말고 제안만."

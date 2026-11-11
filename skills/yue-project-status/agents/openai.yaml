@@ -1,0 +1,4 @@
+interface:
+  display_name: "YuE2 작업 현황"
+  short_description: "이어 하기·다음 단계·진행 현황 대시보드"
+  default_prompt: "$yue-project-status 어제 하던 곡 어디까지 했는지 보고 다음 할 일 알려줘."

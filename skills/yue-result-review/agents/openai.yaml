@@ -1,0 +1,4 @@
+interface:
+  display_name: "YuE2 결과 검수"
+  short_description: "truncation·길이·가사 반영·청취 구분과 재제작 판단"
+  default_prompt: "$yue-result-review 방금 생성한 곡을 검수하고 재제작이 필요한지 판단해줘."

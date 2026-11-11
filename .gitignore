@@ -1,0 +1,5 @@
+yue-music-workspace/
+dist/
+.DS_Store
+__pycache__/
+.omx/

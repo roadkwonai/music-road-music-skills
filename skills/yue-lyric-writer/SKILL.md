@@ -22,8 +22,8 @@ description: Road Music YuE2(yue-mlx/yue)용 가사를 쓰거나, 허용된 범�
 ## YuE2 가사 계약 (반드시)
 
 - 가사 칸에는 **실제로 부를 말**과 **구간 태그**만 둔다. 공식 가이드: lyrics에는 부를 말과 `[Verse]`·`[Chorus]` 같은 섹션, 구현 메모는 빼기.
-- 쓰는 태그: `[Verse]`, `[Pre-Chorus]`, `[Chorus]`, `[Bridge]`, 필요할 때만 `[Intro]`·`[Interlude]`·`[Outro]`. 순수 연주 구간 아래에는 가사를 두지 않는다. 정리 규칙은 Road Music `docs/lyrics-tags.md`.
-- **쓰지 않는 것:** 번호 붙은 태그(`[Verse 1]`), 태그 수식어(`[Chorus - anthemic]`), 무드 태그(`[Whispered]`), 무대 지시 `(guitar solo)`, 백보컬 괄호 `(ooh)`, 발음 철자 바꾸기, `/발음/`, 화자 표시(`남:`/`여:`), `Style:`/`BPM:` 줄, 제목 `#` 줄. 공식 main 가이드: 가사에 넣은 발음·화자 주석은 별도 제어 채널이 아니다.
+- 쓰는 태그: `[Verse]`, `[Pre-Chorus]`, `[Chorus]`, `[Bridge]`, 필요할 때만 `[Intro]`·`[Interlude]`·`[Outro]`. 순수 연주 구간 아래에는 가사를 두지 않는다. 정리 규칙은 Road Music `docs/lyrics-tags.md`이며, 이는 Road Music 전처리 계약이지 YuE2가 각 태그의 음악적 효과를 보장한다는 뜻이 아니다(공식 예시는 `[Verse]`·`[Chorus]`).
+- **쓰지 않는 것:** 번호 붙은 태그(`[Verse 1]`), 태그 수식어(`[Chorus - anthemic]`), 무드 태그(`[Whispered]`), 무대 지시 `(guitar solo)`, 백보컬 괄호 `(ooh)`, 발음 철자 바꾸기, `/발음/`, 화자 표시(`남:`/`여:`), `Style:`/`BPM:` 줄, 제목 `#` 줄. 근거: 공식 main generation은 가사에 넣은 발음·화자 주석이 별도 제어 채널이 아니라고 하고, 나머지 항목은 Road Music 정리 규칙(`lyrics-tags.md`)과 `officialGuide` 점검이다.
 - 창법·에너지 의도는 `yue-style-engineer`에게 넘겨 style/`parts.vocal`·`parts.dynamics`로 옮긴다(곡 전체 성향일 뿐 구간별 고정 아님).
 - 후렴을 "후렴 2회"라고 쓰지 않고 실제 가사를 반복해서 적는다.
 - 길이를 문자 수·음절 수로 기계적으로 자르지 않는다. 목표 길이는 기록용이며 실제 길이는 가사 분량과 자연 EOS가 정한다.
@@ -53,6 +53,6 @@ AI가 쓴 초안에만 적용한다. 사용자 원문에는 제안만 한다.
 
 ## 끝나면
 
-1. 정리본 확인: `lyrics:clean --json '{"text":…}'` 결과와 원문을 비교해 태그 변환·삭제를 확인한다(정리본으로 원문을 덮어쓰지 않음).
+1. 정리본 확인: 초안 단계에서는 `song:prepare`(로컬)의 `changes.lyrics.prepared`로 태그 변환·삭제를 확인한다. 생성 준비 단계에서는 `lyrics:clean --json '{"text":…}'`(서비스)도 쓸 수 있다. 정리본으로 원문을 덮어쓰지 않는다.
 2. `yue-lyric-reviewer`로 검수(자체 검수면 별도 단계에서 하고 그렇게 밝힌다).
 3. style은 `yue-style-engineer`, 생성 준비는 `yue-pre-generation-check`.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "YuE2 음악 제작"
+  short_description: "Road Music YuE2 곡 요청의 진입점: 모드 판정·엔진 유지·단계별 스킬 연결"
+  default_prompt: "$yue-music YuE MLX로 한국어 발라드 1곡 준비해줘. 생성 전에 가사·style·보정 보고를 보여줘."

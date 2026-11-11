@@ -1,0 +1,4 @@
+interface:
+  display_name: "YuE2 마스터링"
+  short_description: "완성 음원 라우드니스·QC·내보내기(원본 보존)"
+  default_prompt: "$yue-mastering 이 곡을 -14 LUFS 스트리밍용으로 마스터링하고 QC 결과를 보여줘."

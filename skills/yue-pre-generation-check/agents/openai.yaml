@@ -1,0 +1,4 @@
+interface:
+  display_name: "YuE2 생성 전 관문"
+  short_description: "song:prepare 공식 점검·보정 보고·승인 확인 후 생성"
+  default_prompt: "$yue-pre-generation-check 이 song.json으로 생성 준비 점검하고 보정 보고를 보여줘."

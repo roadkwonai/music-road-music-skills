@@ -1,0 +1,4 @@
+interface:
+  display_name: "YuE2 앨범 기획"
+  short_description: "여러 곡의 순서·에너지·곡별 요청 설계"
+  default_prompt: "$yue-album-planner 퇴근길을 주제로 5곡 EP를 YuE MLX용으로 기획해줘."

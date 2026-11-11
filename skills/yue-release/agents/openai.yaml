@@ -1,0 +1,4 @@
+interface:
+  display_name: "YuE2 공개 준비"
+  short_description: "권리·라이선스·차용·메타데이터·홍보 문구·배포 점검"
+  default_prompt: "$yue-release 이 곡을 유튜브에 올리기 전 권리와 메타데이터를 점검해줘."

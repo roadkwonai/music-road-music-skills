@@ -1,0 +1,32 @@
+{
+  "skill_name": "yue-music",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "예전에 Suno에서 쓰던 프롬프트랑 가사인데 YuE MLX로 옮기고 싶어. 원문은 건드리지 말고 어떻게 바꾸면 되는지 보정안이랑 실행할 JSON만 보여줘. 생성은 아직 하지 마.\n\nStyle: Female vocals, breathy and intimate. Dream pop, shimmering guitars, reverb-heavy, no drums. Variety Off, Weirdness 35, Max Mode on, Duration 3:30\nExclude Styles: male vocals, autotune\nLyrics:\n[Intro - soft]\n[Verse 1 - whispered]\n새벽 세 시 창문을 열면\n네 목소리가 (목쏘리가) 들려와\n[Chorus - soaring]\nFloat away, float away (ooh)\n우린 별이 돼\n[Guitar Solo]\n[Outro]\nFloat away",
+      "expected_output": "원문 보존, Suno 전용 설정을 YuE2 기능처럼 옮기지 않음, 긍정형 style 보정안, 주석·수식어 태그 보정안, yue-mlx JSON, song:prepare 점검, 보정 보고 절, 생성 없음",
+      "assertions": []
+    },
+    {
+      "id": 2,
+      "prompt": "맥에서 YuE MLX로 한국어 여성 보컬 락발라드 1곡 만들고 싶어. 이별 후에 혼자 남은 방 정리하는 내용으로 150초 정도, 피아노랑 일렉기타 중심으로. 가사는 네가 써줘.",
+      "expected_output": "기본 검토 모드: 가사 작성·한국어 검수·style·JSON·song:prepare·보정 보고를 한 번에 보여주고 승인 질문, 생성 없음, 길이 보장 없음",
+      "assertions": []
+    },
+    {
+      "id": 3,
+      "prompt": "윈도우 PC(RTX 4090)에서 yue 엔진으로 돌릴 거야. 가사는 아래 그대로 쓰고, 프롬프트랑 옵션은 네가 알아서 전부 정해서 생성까지 자동으로 해줘. 검토 안 해도 돼. 길이는 정확히 3분으로 맞춰줘.\n\n[Verse 1]\n퇴근길 버스 창가에 기대\n오늘도 수고했다 말해 (남자 파트)\n[Chorus - 힘차게]\n달려라 달려 내일을 향해\n멈추지 마 (멈추지 마)\n[Verse 2]\n주머니 속 식은 커피 한 캔\n그래도 웃으며 집에 가\n[Chorus - 힘차게]\n달려라 달려 내일을 향해\n멈추지 마 (멈추지 마)",
+      "expected_output": "엔진 yue 유지, 사용자 가사 무단 수정 없음(주석 advice는 보고·제안), 정확한 3분 보장 안 함, 생성 명령 기록, 보정 보고 절",
+      "assertions": []
+    },
+    {
+      "id": 4,
+      "prompt": "YuE MLX로 만든 곡 파일인데 유튜브에 올릴 거라 -14 LUFS로 마스터링해줘. 원본은 그대로 두고 결과 파일이랑 QC 결과 표로 보여줘. 파일: {INPUT}",
+      "expected_output": "원본 보존, 새 경로에 -14 LUFS·TP -1 이하 WAV, 측정 전후 표, 청취 미실행 명시",
+      "files": [
+        "evals/files/test-tone-48k.flac"
+      ],
+      "assertions": []
+    }
+  ]
+}
