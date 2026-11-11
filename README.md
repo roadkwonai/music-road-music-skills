@@ -9,7 +9,7 @@ Suno용으로 만들어진 [claude-ai-music-skills](https://github.com/bitwize-m
 | 항목 | 내용 |
 | --- | --- |
 | 대상 엔진 | `yue-mlx`(Apple Silicon, 커뮤니티 MLX 포트) · `yue`(Windows NVIDIA, 공식 YuE2 워커) |
-| 기준 | YuE2 공식 `yue2-v0.1.6` 고정판, 공식 main(2026-11-01), Road Music CLI 0.1.0(protocol 2) |
+| 기준 | YuE2 공식 `yue2-v0.1.6` 고정판, 공식 main(2026-11-01), Road Music CLI 0.1.1 이상(protocol 2, `song:prepare`의 `officialGuide` 점검 포함) |
 | 에이전트 | Claude Code, Codex(codex-cli 0.167.0에서 확인) |
 | 스킬 | 14개 ([레퍼런스](docs/skills.md)) |
 | 버전 | 0.1.0 — 실제 배포 전까지 0.1.0 유지·재게시, 스킬 사용 시 최신 Release 자동 확인 |

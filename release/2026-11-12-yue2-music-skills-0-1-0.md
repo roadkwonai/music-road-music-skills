@@ -57,4 +57,5 @@ Suno용 [claude-ai-music-skills](https://github.com/bitwize-music-studio/claude-
 - 실제 생성은 1곡만 감사했고 직접 청취는 하지 않았습니다.
 - `yue`(Windows NVIDIA) 경로는 Mac에서 준비 점검만 했습니다. `score:check`는 YuE 런타임이 필요합니다.
 - `officialGuide`는 문자열 휴리스틱이며 사람 판단의 검수를 대신하지 않습니다.
+- `song:prepare`의 `officialGuide` 점검은 Road Music CLI 0.1.1(2026-11-12)부터 있습니다. 이전 CLI에서는 정적 점검으로 대신하고 `미실행`으로 보고하며 `cli:update:check`를 안내합니다.
 - 개인 음원·프로젝트·토큰·모델은 묶음과 Release 자산에 포함하지 않습니다.

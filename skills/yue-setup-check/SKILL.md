@@ -22,7 +22,7 @@ roadmusic() { node "${ROAD_MUSIC_HOME:-/Users/freelife/youtube/music/music-road}
 | --- | --- | --- | --- |
 | 1 | Road Music 위치 | `test -f "$ROAD_MUSIC_HOME/cli/road-music.js"` | 파일 있음. 없으면 `ROAD_MUSIC_HOME` 설정 안내 |
 | 2 | Node.js | `node --version` | 실행됨(Road Music 문서 기준 Node.js 24 LTS 권장) |
-| 3 | CLI 버전·업데이트 알림 | `roadmusic cli:version`, `roadmusic cli:update:check` | 새 버전은 알리기만 함 |
+| 3 | CLI 버전·업데이트 알림 | `roadmusic cli:version`, `roadmusic cli:update:check` | 새 버전은 알리기만 함. 0.1.1보다 낮으면 `song:prepare`의 `officialGuide` 공식 점검이 없다고 함께 알림 |
 | 4 | 스킬 묶음 업데이트 | `node "<yue-skills-update 폴더>/scripts/check-update.mjs"` | `status`에 따라 알림(`yue-skills-update`) |
 | 5 | YuE 지원 범위 | `roadmusic yue:capabilities --json '{"engine":"yue-mlx"}'` | `platformMatches`, 설치 파일 감지, 기본값(CFG·ODE·runtime). 파일 감지는 실행 준비 확인이 아님 |
 | 6 | 입력 계약 | `roadmusic cli:schema` | `song:prepare`·`song:generate`에 `engine`·`cot`·`abc`·`parts` 필드 존재 |

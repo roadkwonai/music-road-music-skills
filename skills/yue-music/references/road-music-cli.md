@@ -7,7 +7,7 @@ roadmusic() { node "${ROAD_MUSIC_HOME:-/Users/freelife/youtube/music/music-road}
 
 Windows PowerShell 예: `$env:ROAD_MUSIC_HOME="C:\path\to\music-road"; node "$env:ROAD_MUSIC_HOME\cli\road-music.js" cli:version`.
 
-최종 응답은 stdout JSON 한 줄(`{"ok":true,"result":…}` 또는 `{"ok":false,"error":{…}}`), `--events` 진행 JSONL은 stderr다. 입력 필드는 실행 버전의 `roadmusic cli:schema`(로컬)가 최종 기준이다(아래는 CLI 0.1.0, protocol 2 기준 요약). `schema`도 같은 내용을 주지만 서비스를 시작한다.
+최종 응답은 stdout JSON 한 줄(`{"ok":true,"result":…}` 또는 `{"ok":false,"error":{…}}`), `--events` 진행 JSONL은 stderr다. 입력 필드는 실행 버전의 `roadmusic cli:schema`(로컬)가 최종 기준이다(아래는 CLI 0.1.1, protocol 2 기준 요약. `officialGuide`는 CLI 0.1.1부터 있다. 결과에 없으면 이전 CLI이므로 정적 점검으로 대신하고 `미실행(CLI 0.1.1 필요)`이라고 적은 뒤 `cli:update:check`를 안내한다). `schema`도 같은 내용을 주지만 서비스를 시작한다.
 
 ## 명령 순서
 
