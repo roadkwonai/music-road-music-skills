@@ -28,7 +28,7 @@ description: Road Music YuE2로 생성한 완성 음원을 원본은 보존한 �
 
 ## 절차
 
-1. **입력 확인:** `songs:list`/`song:detail`의 곡 `dir`·`audio`를 얻는다(서비스 명령). `ffprobe`로 실제 코덱을 확인한다. `yue-mlx`는 무손실 `audio.flac`을 남기지만, Windows `yue`는 `audio.wav`만 쓰고, 설정에 따라 MP3만 남은 곡도 있다. 손실(MP3) 원본이면 WAV 마스터도 무손실 품질이 아님을 보고한다.
+1. **입력 확인:** 입력이 곡처럼 보이지 않으면(수 초 길이, 단일 톤, 무음 등) 그 사실을 먼저 알리고 사용자가 의도한 파일인지 확인한다. 곡이 YuE2 생성물인지 기록(`song:detail`·제작 기록)으로 확인되지 않으면 그렇게 적는다. `songs:list`/`song:detail`의 곡 `dir`·`audio`를 얻는다(서비스 명령). `ffprobe`로 실제 코덱을 확인한다. `yue-mlx`는 무손실 `audio.flac`을 남기지만, Windows `yue`는 `audio.wav`만 쓰고, 설정에 따라 MP3만 남은 곡도 있다. 손실(MP3) 원본이면 WAV 마스터도 무손실 품질이 아님을 보고한다.
 2. **측정(원본):**
 
    ```bash

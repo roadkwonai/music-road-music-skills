@@ -13,7 +13,7 @@ description: YuE2 공식 가이드(장르·악기·보컬·언어·템포)와 �
    - 공식 예시 형태(`song.json`): `English, warm piano pop, expressive female voice, acoustic piano, rounded bass and light drums, lyrical memorable melody, unhurried phrasing, 88 BPM`
    - 한국어 예: `Korean, emotional piano ballad, solo female vocal, clear Korean phrasing, piano, cello, string ensemble, restrained verse and open chorus, 72 BPM`
    - 가사에 여러 언어가 섞이면 부르는 언어를 모두 쓴다: `Korean and English, dream pop, …`.
-   - 3/4·6/8처럼 박자가 특징이면 style에도 쓴다(`3/4 waltz`). ABC를 줄 때는 `M:`·`Q:`와 같은 값.
+   - 박자가 특징이면 style에 **말로** 쓴다(`triple-meter waltz`, `compound six-eight sway`). Road Music 조합기는 style의 `/`를 `, `로 바꾸므로 `3/4 waltz`는 YuE2에 "3, 4 waltz"로 전달된다(2026-11-12 실측, notes에도 안 나옴). `R&B/soul` 같은 슬래시 태그도 `R&B and soul`처럼 쓴다. ABC를 줄 때는 `M:`·`Q:`와 같은 값.
 2. **긍정형으로(Road Music 권장).** `negative_prompt` 필드는 없다(공식). 공식 예시 style에도 `no guitar`·`no vocals`가 있으므로 부정 문구를 "공식 위반"이라고 하지는 않지만, 제외는 보장되지 않으므로 Road Music은 긍정형을 권한다. `no drums`, `without autotune`, `빼고`는 `sparse piano and cello arrangement`, `natural unprocessed vocal`처럼 원하는 소리로 바꾼다. 완전 배제는 보장하지 않는다.
 3. **명령문 금지.** "Generate…", "make a song…", "you are…", "만들어"를 넣지 않는다.
 4. **실존 가수·밴드 이름 금지.** 참조 가수 필드가 없다. 특징을 음악 용어로 쓴다(`breathy airy female vocal`, `gritty baritone`).

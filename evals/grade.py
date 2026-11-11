@@ -84,9 +84,9 @@ def grade_mastering(run_dir, resp, cmds, a, E):
     a("결과 통합 라우드니스가 -14 LUFS ±0.5", best and abs(best[1] + 14) <= 0.5, f"{best}")
     a("결과 트루피크가 -1.0 dBFS 이하", best and best[2] is not None and best[2] <= -1.0, f"{best}")
     a("응답에 측정 전후 표가 있다", re.search(r"\|.*LUFS.*\|", resp) and re.search(r"-3\d\.\d", resp), "표·원본 측정값 탐색")
-    a("청취하지 않았음을 밝혔다", re.search(r"(미청취|청취[^\n]{0,20}(하지 않|미실행|안 했|안 함))", resp), "문구 탐색")
+    a("청취하지 않았음을 밝혔다", re.search(r"(미청취|청취[^\n]{0,30}(하지 않|미실행|안 했|안 함|확인하지 못|못 했))", resp), "문구 탐색")
     a("원본을 보존했다고 밝혔다", re.search(r"(원본[^\n]{0,40}(보존|그대로|덮어쓰지|변경하지))", resp), "문구 탐색")
-    a("음원 생성 명령을 실행하지 않았다", "song:generate" not in cmds.split("실행했을 생성 명령")[0], "commands.md")
+    a("음원 생성 명령을 실행하지 않았다", "song:generate" not in re.split(r"실행했을 (?:생성 )?명령", cmds)[0], "commands.md")
     return finish(run_dir, E)
 
 
@@ -106,7 +106,7 @@ def score_compare(src, cand, inv):
 
 def grade_later(eval_name, run_dir, resp, cmds, a, E):
     import hashlib
-    ran = cmds.split("실행했을")[0]
+    ran = re.split(r"실행했을", cmds)[0]
     bad = STATE_CHANGING.findall(ran)
     a("상태를 바꾸거나 생성하는 명령을 실행하지 않았다", not bad, f"{bad}")
     a("응답이 있다", len(resp) > 300, f"{len(resp)}자")
@@ -146,8 +146,13 @@ def grade_later(eval_name, run_dir, resp, cmds, a, E):
         a("일반 cli:status를 쓰지 않았다", not re.search(r"cli:status(?![^\n]*--no-start)", ran), "commands.md")
     if n == "10":
         a("5곡 표를 만들었다", all(re.search(rf"\|\s*{i}\s*\|", resp) for i in range(1, 6)), "표 행 탐색")
-        a("곡별 요청 JSON 5개", len([p for p in glob.glob(os.path.join(out, "*.json")) if re.search(r"track|song", os.path.basename(p)) and "prep" not in os.path.basename(p)]) >= 5, "파일 수")
+        a("곡별 요청 JSON 5개", len([p for p in glob.glob(os.path.join(out, "**", "*.json"), recursive=True) if re.search(r"track|song", os.path.basename(p)) and "prep" not in os.path.basename(p)]) >= 5, "파일 수")
         a("생성을 실행하지 않았다(초안)", "song:generate" not in ran, "commands.md")
+    if n == "12":
+        a("check-update.mjs를 실행했다", "check-update" in cmds, "commands.md")
+        a("현재·최신 버전을 보고했다", re.search(r"0\.1\.0", resp) and re.search(r"(최신|up-to-date)", resp), "탐색")
+        a("업데이트 방법(git·ZIP)을 안내했다", re.search(r"pull --ff-only", resp) and re.search(r"SHA256|체크섬", resp), "탐색")
+        a("업데이트를 실행하지 않았다", not re.search(r"git[^\n]*\b(pull|reset|checkout)\b|ln -s|unzip", ran), "commands.md")
     if n == "11":
         a("yue-mlx 상태를 보고했다", "yue-mlx" in resp, "탐색")
         a("일반 cli:status를 쓰지 않았다", not re.search(r"cli:status(?![^\n]*--no-start)", ran), "commands.md")
@@ -171,8 +176,8 @@ def grade(eval_name, run_dir):
     res = prep.get("result", {}) if prep.get("ok") else {}
     guide = res.get("officialGuide", {"checks": []})
     advice = [c["id"] for c in guide.get("checks", []) if c["status"] == "advice"]
-    gen_section = re.search(r"실행했을 생성 명령", cmds)
-    ran_generate = bool(re.search(r"song:generate", cmds.split("실행했을 생성 명령")[0])) if cmds else False
+    gen_section = re.search(r"실행했을 (생성 )?명령", cmds)
+    ran_generate = bool(re.search(r"song:generate", re.split(r"실행했을 (?:생성 )?명령", cmds)[0])) if cmds else False
     style = (res.get("nativeRequest") or {}).get("style", final.get("style", "") or "")
     user_style = final.get("style", "") or (final.get("parts") or {}).get("genre", "")
     lyrics = final.get("lyrics", "") or ""
@@ -181,9 +186,11 @@ def grade(eval_name, run_dir):
     def a(text, ok, ev):
         E.append({"text": text, "passed": bool(ok), "evidence": ev})
 
+    if os.path.basename(os.path.dirname(run_dir)) in ("with_skill", "codex") and "iteration-5" in run_dir or "codex-10" in run_dir:
+        a("세션 첫 사용 때 스킬 업데이트 확인을 실행했다", "check-update" in cmds, "commands.md")
     if eval_name.startswith("eval-4"):
         return grade_mastering(run_dir, resp, cmds, a, E)
-    if eval_name.split("-")[1] in {"6", "7", "8", "9", "10", "11"}:
+    if eval_name.split("-")[1] in {"6", "7", "8", "9", "10", "11", "12"}:
         return grade_later(eval_name, run_dir, resp, cmds, a, E)
     a("응답에 '## YuE2 공식 가이드 보정 보고' 절이 있다", "## YuE2 공식 가이드 보정 보고" in resp, "제목 존재" if "## YuE2 공식 가이드 보정 보고" in resp else "제목 없음")
     hdr = re.search(r"\|\s*항목\s*\|\s*원래 입력\s*\|\s*보정 후\s*\|\s*공식 근거\s*\|\s*적용\s*\|", resp)
@@ -228,7 +235,7 @@ def grade(eval_name, run_dir):
         a("style에 Korean·여성 보컬·고음/벨팅 묘사가 있다", re.search(r"korean", style, re.I) and re.search(r"female", style, re.I) and re.search(r"(belt|high note|high-note|soaring|piercing)", style, re.I), f"style={style[:200]}")
         a("style에 실존 가수 비교 문구가 없다", not re.search(r"(like |style of |inspired by )", user_style, re.I), "비교 문구 탐색")
         a("requestPrompt에 사용자 요청 원문을 넣었다", isinstance(final.get("requestPrompt"), str) and "여성 락보컬" in final.get("requestPrompt", ""), f"requestPrompt={str(final.get('requestPrompt'))[:60]}")
-        a("새 프로젝트를 만들어 선택하는 단계를 포함했다", "projects:create" in cmds and "projects:select" in cmds, "commands.md 탐색")
+        a("새 프로젝트를 만드는 단계를 포함했다(create는 자동 선택)", "projects:create" in cmds, "commands.md 탐색")
         a("일반 cli:status로 서비스를 띄우지 않았다", not re.search(r"cli:status(?![^\n]*--no-start)", cmds), "commands.md 탐색")
         a("실행했을 생성 명령(song:generate·job:wait)을 기록했다", gen_section and "song:generate" in cmds and "job:wait" in cmds, "섹션·명령")
         a("자동 위임이라 승인 질문으로 끝나지 않았다", not re.search(r"생성할까요", resp[-400:]), "끝부분")

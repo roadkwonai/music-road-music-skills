@@ -40,7 +40,7 @@
       "prompt": "방금 만든 「끝까지 부를게」 후렴 화성을 좀 더 어둡고 애절한 마이너 느낌으로 바꾸고 싶어. 보컬 선율은 음 높이랑 리듬 그대로 둬야 해. 수정한 악보만 만들어서 보여주고 생성은 아직 하지 마. 원래 악보: {IN}/score.abc, 원래 요청: {IN}/song.json, 곡 폴더(읽기 전용 참고): /Users/freelife/Documents/YueStudio/Songs/여성 락보컬 락발라드 2026-11-12/20261111180413_끝까지 부를게",
       "expected_output": "eval-6-score-edit-darker-chorus",
       "files": [],
-      "profile": "read",
+      "profile": "temp",
       "assertions": []
     },
     {
@@ -81,6 +81,14 @@
       "expected_output": "eval-11-setup-check",
       "files": [],
       "profile": "real",
+      "assertions": []
+    },
+    {
+      "id": 12,
+      "prompt": "yue 스킬 지금 최신 버전이야? 업데이트 있으면 알려주고, 업데이트 방법도 알려줘. 아직 업데이트는 하지 마.",
+      "expected_output": "check-update.mjs 실행, 현재·최신 버전과 상태 보고, 설치 방식별 업데이트 방법 안내, 업데이트 미실행",
+      "files": [],
+      "profile": "temp",
       "assertions": []
     }
   ]

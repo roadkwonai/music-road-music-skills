@@ -43,6 +43,7 @@ YuE 작업에서는 요청마다 위 가이드와 해당 작업의 고정 원문
 - **명령문 금지:** "generate…", "make a song…"을 style에 넣지 않는다(`style-no-instruction`, 근거는 공식의 모드별 원생 지시문).
 - **실존 가수·밴드 이름 금지:** 참조 가수 필드가 없고(공식) 권리 문제가 있다(원본·Road Music 원칙). 특징을 음악 용어로 묘사한다.
 - **태그 길이:** 쉼표 태그 하나가 공백 기준 10단어를 넘으면 Road Music 조합기가 삭제하고 `song:prepare`가 `valid:false`를 낸다.
+- **슬래시 금지:** 조합기는 style의 `/`를 `, `로 바꾼다(notes 없음). 박자는 `triple-meter waltz`처럼 말로, `R&B/soul`은 `R&B and soul`로 쓰고 `nativeRequest.style`에서 확인한다.
 - **구간 태그 범위:** `[Pre-Chorus]`·`[Bridge]`·`[Intro]`·`[Interlude]`·`[Outro]`·`[instrumental]`은 Road Music 전처리가 유지하는 태그다. 공식 예시는 `[Verse]`·`[Chorus]`만 보여주므로 다른 태그의 음악적 효과를 YuE2가 보장한다고 쓰지 않는다.
 - **여러 언어 가사:** 실제로 부르는 언어를 모두 style 앞에 쓴다(예: `Korean and English`).
 - **기본값 유지:** `cot:"full"`, 기본 CFG·샘플링·ODE, runtime 기본값. 바꾸면 "실험"이라고 밝히고 한 번에 한 요소만 바꾼다. `parts.strict`+`parts.strong`을 함께 쓰면 CFG가 1.5로 바뀌므로 이것도 실험이다.
@@ -107,6 +108,8 @@ Road Music CLI 명령 중 일부는 **서비스(백그라운드 앱)를 시작**
 YuE·`yue-mlx`의 프롬프트를 쓰거나 생성을 준비할 때마다(초안만 요청한 경우 포함) `song:prepare`(로컬)의 `officialGuide`로 점검·보정하고 [보고 형식](report-template.md)의 `## YuE2 공식 가이드 보정 보고` 절을 **보정이 없어도** 포함한다. `song:prepare`를 실행하지 못했으면 정적 점검 결과와 `미실행`을 적는다.
 
 ## 8. 확인한 사실만 쓰기
+
+시각은 한국 시간(KST)으로 적고, UTC 원문을 옮기면 `UTC`를 붙인다.
 
 생성 소요 시간, 다운로드 용량, 메모리 요구량, 모델 라이선스, 설치 상태는 이번에 실제로 읽은 문서나 CLI 응답에 있을 때만 적고 출처를 함께 쓴다. 확인하지 못했으면 "미확인"이라고 쓴다. 공식 코드·문서 라이선스(고정판 CC BY-NC 4.0, main Apache-2.0)와 모델 가중치 라이선스는 서로 다르다(`docs/yue-prompt-guide.md#rights`). `engines:list`의 설치 상태는 그 조회의 `ROADMUSIC_DATA_DIR`·프로필 기준이므로, 임시 데이터 폴더에서 본 "미설치"를 사용자 실제 환경의 상태로 단정하지 않는다.
 

@@ -66,7 +66,7 @@ Windows PowerShell 예: `$env:ROAD_MUSIC_HOME="C:\path\to\music-road"; node "$en
 
 `coverAudio`·`recording`·`soundEffect`는 ACE 경로이며 YuE 요청에 붙이지 않는다. 정의되지 않은 필드는 schema가 거부한다.
 
-조합기의 자동 처리(`renderer/prompt.js`): 가사에 한글이 있고 style에 Korean이 없으면 맨 앞에 `Korean`을 넣는다. style의 대괄호·`Style:` 같은 라벨·따옴표는 지운다(notes에 기록). 10단어를 넘는 태그는 삭제하고 `valid:false`가 된다.
+조합기의 자동 처리(`renderer/prompt.js`): 가사에 한글이 있고 style에 Korean이 없으면 맨 앞에 `Korean`을 넣는다. style의 `/`는 `, `로 바뀐다(notes에 남지 않음). style의 대괄호·`Style:` 같은 라벨·따옴표는 지운다(notes에 기록). 10단어를 넘는 태그는 삭제하고 `valid:false`가 된다.
 
 ## `song:prepare` 결과 읽기
 

@@ -23,7 +23,7 @@ roadmusic() { node "${ROAD_MUSIC_HOME:-/Users/freelife/youtube/music/music-road}
 | G4 | 가사 정리 | 정리본(`changes.lyrics.prepared`)에서 부르는 문장이 삭제·잘림·치환되지 않음. 연주곡은 골격 교체가 정상이므로 예외 | 바뀐 부분만 보고·재검토 |
 | G5 | style 조합 | `changes.style.dropped`가 비었고 핵심 지시가 남음 | 긴 태그를 나눔 |
 | G6 | 준비 | `song:prepare`가 `ok:true`이고 `valid:true`. `ok:false`(INVALID_ARGUMENT: 길이 20~360 밖, off+abc/plan, instruments+instrumentation 등)와 `valid:false`(태그 삭제 등)를 구분해 보고 | 원인 수정 |
-| G7 | 공식 점검 | `officialGuide.advice`가 0이거나 남은 advice마다 `유지(이유)`가 있음 | 보정 절차 |
+| G7 | 공식 점검 | `officialGuide.advice`가 0이거나 남은 advice마다 `유지(이유)`가 있음. 보고에는 `통과(advice n, 유지 이유: …)`처럼 남은 수를 함께 쓴다. 사용자 원문의 화자·파트 표기(`(남자 파트)` 등)를 그대로 제출하면 그것이 불릴 수 있다는 점을 보고 첫머리에 밝힌다 | 보정 절차 |
 | G8 | 권리·사실 | style에 실존 가수·밴드 이름 없음, 커버면 원곡 권리 확인, 사실 기반 곡이면 `yue-research`의 사람 확인 완료 | 묘사로 대체 제안 / 확인 대기 |
 | G9 | 원문 보존 | 사용자 원문과 전달본의 **의미가 달라지는 차이**(부르는 문장의 삭제·잘림·치환, 지정한 장르·보컬·악기의 뜻 변경)가 없거나 승인됨. BPM·악기 요약·Korean 추가, 태그 이름 정리는 보고만 | 해결 전 생성 금지 |
 | G10 | 승인 | 기본 검토·부분 위임: 사용자의 명시적 승인. 제공안 승인·전체 자동 위임·지정 수정·재생성: 그 범위 확인 후 재승인 없이 진행. 승인 후 AI가 의미를 바꿨다면 재검토 | 검토안 제시 후 대기 |
