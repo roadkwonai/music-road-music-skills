@@ -1,0 +1,11 @@
+{
+  "title": "천천히 가자",
+  "engine": "yue-mlx",
+  "count": 1,
+  "style": "Korean, acoustic folk pop, warm solo male vocal, acoustic guitar, piano, light percussion, simple stepwise melody, 80 BPM",
+  "lyrics": "[Verse]\n창가에 햇살이\n조용히 앉았네\n\n[Chorus]\n오늘도 괜찮아\n천천히 가자",
+  "abc": "X:1\nT:\nM:4/4\nL:1/32\nQ:1/4=80\nV: Vocal clef=treble name=\"Vocal Melody\" snm=\"Vocal\"\nV: Ins clef=treble name=\"Ins Melody\" snm=\"Inst.\"\nK:C\n% verse\nV: Vocal\nE8G8A8G8|E16D16|C8D8E8G8|E32|\nV: Ins\nZ4|\n% chorus\nV: Vocal\nc8c8B8A8|G16E16|A8G8E8D8|C32|\nV: Ins\nZ4|\n",
+  "seed": 11,
+  "cot": "melody",
+  "mode": "song"
+}

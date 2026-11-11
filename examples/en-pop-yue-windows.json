@@ -1,0 +1,10 @@
+{
+  "title": "Paper Boats",
+  "engine": "yue",
+  "count": 1,
+  "style": "English, soft piano pop, warm female vocal, acoustic piano, round bass, light drums, singable melody, relaxed phrasing, 92 BPM",
+  "lyrics": "[Verse]\nFolded notes in a paper boat\nSent them down where the gutters flow\nEvery word that I never said\nFloating out to the river bed\n\n[Chorus]\nCarry it home, carry it slow\nLet the water know what I know\nIf you find it under the bridge\nRead it once and let it go",
+  "seed": 831002,
+  "cot": "melody",
+  "mode": "song"
+}

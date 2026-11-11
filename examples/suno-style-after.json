@@ -1,0 +1,11 @@
+{
+  "title": "Iron Gates",
+  "engine": "yue-mlx",
+  "count": 1,
+  "style": "English, heavy rock, gritty emotional male baritone vocal, distorted electric guitar, bass guitar, drums, organic guitar-driven arrangement, melodic guitar solo, stadium anthem chorus",
+  "lyrics": "[Verse]\nIron gates and silver rain\nEvery echo calls my name\n\n[Chorus]\nRaise the fire, raise the sky\nWe were born to never die\n\n[Interlude]",
+  "bpm": 140,
+  "seed": 1,
+  "cot": "full",
+  "mode": "song"
+}

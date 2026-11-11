@@ -1,0 +1,41 @@
+{
+  "title": "장날 가는 길",
+  "engine": "yue-mlx",
+  "count": 1,
+  "parts": {
+    "genre": "Korean, traditional trot",
+    "vocal": [
+      "mature solo male vocal",
+      "clear Korean phrasing"
+    ],
+    "instrumentation": [
+      {
+        "instrument": "accordion",
+        "role": "lead",
+        "technique": "bright fills",
+        "section": "Chorus"
+      },
+      {
+        "instrument": "brass section",
+        "role": "response",
+        "section": "Chorus"
+      },
+      {
+        "instrument": "drums",
+        "role": "rhythm",
+        "technique": "two-beat ppongjjak",
+        "section": "All"
+      }
+    ],
+    "dynamics": [
+      "lively verse",
+      "festive chorus lift"
+    ],
+    "bpm": 120
+  },
+  "lyrics": "[Verse]\n새벽 버스 창가에 앉아\n보따리를 무릎에 얹고\n어머니가 싸 주신 떡을\n한 입 먹고 웃어 봅니다\n\n[Chorus]\n장날 가는 길 신이 나네\n굽이굽이 고갯길도 노래가 되네\n오늘 장사 잘되거든\n막걸리 한 잔 하고 오세",
+  "targetSeconds": 150,
+  "seed": 42,
+  "cot": "full",
+  "mode": "song"
+}

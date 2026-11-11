@@ -1,0 +1,12 @@
+{
+  "title": "새벽 산책",
+  "engine": "yue-mlx",
+  "count": 1,
+  "instrumental": true,
+  "style": "lo-fi hip hop, dusty and relaxed, Rhodes electric piano, upright bass, brushed drums, gentle swing",
+  "bpm": 76,
+  "targetSeconds": 120,
+  "seed": 7,
+  "cot": "full",
+  "mode": "song"
+}

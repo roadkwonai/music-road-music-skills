@@ -1,0 +1,12 @@
+{
+  "title": "비 갠 오후",
+  "engine": "yue-mlx",
+  "count": 1,
+  "style": "Korean, emotional piano ballad, solo female vocal, clear Korean phrasing, piano, cello, string ensemble, restrained verse and open chorus, unhurried phrasing",
+  "lyrics": "[Verse]\n우산을 접고 걷는 길\n젖은 나뭇잎이 반짝여\n네가 좋아하던 그 가게 앞\n불 켜진 창을 지나가\n\n[Pre-Chorus]\n괜찮다고 말하던 내가\n조금 늦게 웃어 봐\n\n[Chorus]\n비 갠 오후에 너를 보내\n천천히 아주 천천히\n젖은 마음도 해를 만나면\n언젠가 마르겠지\n\n[Bridge]\n다시 비가 와도\n이젠 우산을 펼 수 있어\n\n[Chorus]\n비 갠 오후에 너를 보내\n천천히 아주 천천히\n젖은 마음도 해를 만나면\n언젠가 마르겠지",
+  "bpm": 72,
+  "targetSeconds": 180,
+  "seed": 20261112,
+  "cot": "full",
+  "mode": "song"
+}

@@ -1,0 +1,10 @@
+{
+  "title": "Iron Gates",
+  "engine": "yue-mlx",
+  "count": 1,
+  "style": "Male baritone, gritty and emotional. Heavy rock, distorted guitars, no synths. Make a song that feels like a stadium anthem",
+  "lyrics": "[Verse 1 - cold regal]\nIron gates and silver rain\n[Whispered]\nEvery echo calls my name (my name)\n\n[Chorus - anthemic]\nRaise the fire, raise the sky\nWe were born to never die\n(guitar solo)",
+  "seed": 1,
+  "cot": "full",
+  "mode": "song"
+}
